@@ -3,6 +3,7 @@ axes.prop_cycle: cycler(color=['000000', 'E69F00', '56B4E9', '009E73', 'F0E442',
 axes.edgecolor: k
 
 # Figure params
+figure.constrained_layout.use: True
 figure.facecolor: white
 figure.figsize: 5.69, 3.52
 figure.dpi: 200
@@ -61,7 +62,7 @@ text.usetex: True
 text.latex.preamble: \usepackage{amsmath} \usepackage{amssymb}
 
 # Savefig params
-savefig.bbox: tight
+savefig.bbox: None
 savefig.dpi: 300
 savefig.format: pdf
 savefig.pad_inches: 0.05

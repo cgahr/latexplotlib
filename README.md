@@ -33,7 +33,7 @@ Both styles change the defaults of the `plt.savefig` command so that all saved f
 ```python
 plt.savefig(
     ...,
-    bbox_inches="tight",
+    bbox_inches=None,
     dpi=300,
     format="pdf",
     orientation="portrait",
@@ -141,6 +141,12 @@ fig, axes = subplots(3, 2, fraction=0.8)
     \caption{A test figure.}
 \end{figure}
 ```
+
+## `plt.tight_layout()`
+
+`plt.tight_layout()` changes the size of the produced figure. As such it is recommended to only use `plt.tight_layout()` with care! The same is true for `savefig(..., bbox_inches=None)`!
+
+Instead one should use `constrained_layout` which produces nice figures. `constrained_layout` is used by default with all latexplotlib styles.
 
 ## References
 
