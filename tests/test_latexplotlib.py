@@ -37,7 +37,7 @@ class TestSetPageSize:
         monkeypatch.setattr(lpl, "CONFIGDIR", tmp_path)
         monkeypatch.setattr(lpl, "CONFIGPATH", configpath)
 
-        lpl.set_page_size(HEIGHT, WIDTH)
+        lpl.set_page_size(WIDTH, HEIGHT)
 
         with open(configpath, "r", encoding="utf-8") as cfg:
             config = json.load(cfg)
@@ -51,7 +51,7 @@ class TestSetPageSize:
         monkeypatch.setattr(lpl, "CONFIGDIR", configdir)
         monkeypatch.setattr(lpl, "CONFIGPATH", configpath)
 
-        lpl.set_page_size(HEIGHT, WIDTH)
+        lpl.set_page_size(WIDTH, HEIGHT)
 
         with open(configpath, "r", encoding="utf-8") as cfg:
             config = json.load(cfg)

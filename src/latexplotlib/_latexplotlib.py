@@ -34,7 +34,10 @@ def _round(val: float) -> float:
 
 
 @export
-def set_page_size(height: int, width: int):
+def set_page_size(
+    width: int,
+    height: int,
+):
     """Sets to size of the latex page in pts.
 
     You can find the size of the latex page under point 7 and 8 from
@@ -44,10 +47,10 @@ def set_page_size(height: int, width: int):
 
     Parameters
     ----------
-    height : int
-        The height of the latex page in pts.
     width : int
         The width of the latex page in pts.
+    height : int
+        The height of the latex page in pts.
     """
     try:
         os.makedirs(CONFIGDIR)
@@ -65,7 +68,7 @@ def get_page_size() -> Tuple[int, int]:
     Returns
     -------
     int, int
-        (height, width) of the page in pts.
+        (width, height) of the page in pts.
     """
     try:
         with open(CONFIGPATH, "r", encoding="utf-8") as cfg:
