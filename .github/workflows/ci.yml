@@ -1,0 +1,38 @@
+name: CI Lint
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: Set up python 3.9
+      uses: actions/setup-python@v2
+      with:
+        python-version: 3.9
+    - name: Install dependencies
+      run: |
+        pip install --upgrade pip
+        pip install -r requirements_test.txt
+        pip install .
+    - name: Black code formatter
+      run: black src --check
+    - name: Isort sort imports
+      run: isort src --check
+    - name: Flake8 code checker
+      run: flake8 src
+    - name: Mypy code formatter
+      run: mypy src
+    - name: Pytest test code
+      run: pytest
+    - name: Archive pytest coverage report
+      uses: actions/upload-artifact@v2
+      with:
+        name: code-coverage-report
+        path: htmlcov

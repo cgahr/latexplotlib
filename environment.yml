@@ -1,0 +1,24 @@
+name: texplotlib
+channels:
+  - conda-forge
+  - defaults
+dependencies:
+  - matplotlib
+  - isort
+  - mypy
+  - pip
+  - pylint
+  - pytest
+  - pip:
+    - black
+    - coverage
+    - flake8
+    - flake8-bandit
+    - flake8-bugbear
+    - flake8-comprehensions
+    - pre-commit
+    - pycodestyle
+    - pytest-console-scripts
+    - pytest-cov
+    - pytest-env
+    - pytest-mock
