@@ -30,7 +30,7 @@ def export(fun: Callable):  # type: ignore
 
 
 def _round(val: float) -> float:
-    return int(100 * val) / 100
+    return int(10 * val) / 10
 
 
 @export

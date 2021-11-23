@@ -28,7 +28,7 @@ def test_constants():
 
 @pytest.mark.parametrize("value", [123.234, 23.4576585, 234])
 def test__round(value):
-    assert int(100 * value) / 100 == lpl._round(value)
+    assert int(10 * value) / 10 == lpl._round(value)
 
 
 class TestSetPageSize:
