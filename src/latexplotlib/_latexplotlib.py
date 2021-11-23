@@ -2,6 +2,7 @@ import json
 import os
 import sys
 import warnings
+from pathlib import Path
 from typing import Any, Callable, Tuple
 
 import matplotlib.pyplot as plt
@@ -15,7 +16,8 @@ WIDTH = 412
 CONFIGFILE = "config.ini"
 
 NAME = "latexplotlib"
-CONFIGDIR = user_config_dir(NAME)
+CONFIGDIR = Path(user_config_dir(NAME))
+CONFIGPATH = CONFIGDIR.joinpath(CONFIGFILE)
 
 
 def export(fun: Callable):  # type: ignore
@@ -25,6 +27,10 @@ def export(fun: Callable):  # type: ignore
     else:
         mod.__all__ = [fun.__name__]  # type: ignore
     return fun
+
+
+def _round(val: float) -> float:
+    return int(100 * val) / 100
 
 
 @export
@@ -43,7 +49,12 @@ def set_page_size(height: int, width: int):
     width : int
         The width of the latex page in pts.
     """
-    with open(CONFIGDIR + CONFIGFILE, "w", encoding="utf-8") as cfg:
+    try:
+        os.makedirs(CONFIGDIR)
+    except FileExistsError:
+        pass
+
+    with open(CONFIGPATH, "w", encoding="utf-8") as cfg:
         json.dump({"width": width, "height": height}, cfg, indent=4)
 
 
@@ -57,25 +68,23 @@ def get_page_size() -> Tuple[int, int]:
         (height, width) of the page in pts.
     """
     try:
-        with open(CONFIGDIR + CONFIGFILE, "r", encoding="utf-8") as cfg:
+        with open(CONFIGPATH, "r", encoding="utf-8") as cfg:
             config = json.load(cfg)
     except FileNotFoundError:
         warnings.warn("Page size not set, using defaults (see 'set_page_dimension').")
         return WIDTH, HEIGHT
-    return config["height"], config["width"]
+    return (config["width"], config["height"])
 
 
 @export
 def reset_page_size():
-    if os.path.exists(CONFIGDIR + CONFIGFILE):
-        os.remove(CONFIGDIR + CONFIGFILE)
+    if os.path.exists(CONFIGPATH):
+        os.remove(CONFIGPATH)
 
 
 @export
 def convert_pt_to_in(pts: int) -> float:
     """Converts a length in pts to a length in inches.
-
-    The length in inches is rounded down to two decimals after the comma.
 
     Parameters
     ----------
@@ -91,39 +100,31 @@ def convert_pt_to_in(pts: int) -> float:
     ----------
     - https://www.overleaf.com/learn/latex/Lengths_in_LaTeX
     """
-    inch = 12.0 * 249.0 / 250.0 / 864.0 * pts
-    return int(100 * inch) / 100
+    return 12.0 * 249.0 / 250.0 / 864.0 * pts
 
 
 def _set_size(nrows, ncols, fraction: float = 1.0):
-    height_pt, width_pt = get_page_size()
+    max_width_pt, max_height_pt = get_page_size()
 
-    width_in = convert_pt_to_in(width_pt) * fraction
-    height_in = width_in / GOLDEN_RATIO * (nrows / ncols)
+    if fraction < 0:
+        raise ValueError("fraction must be positive!")
+    elif fraction > 1:
+        width_pt = max_width_pt
+    else:
+        width_pt = max_width_pt * fraction
 
-    max_height_in = convert_pt_to_in(height_pt) * fraction
+    height_pt = width_pt / GOLDEN_RATIO * (nrows / ncols)
 
-    if height_in > max_height_in:
-        width_in = width_in / max_height_in * height_in
-        height_in = max_height_in
+    if height_pt > max_height_pt:
+        width_pt = width_pt * max_height_pt / height_pt
+        height_pt = max_height_pt
 
-    return width_in, height_in
+    return _round(convert_pt_to_in(width_pt)), _round(convert_pt_to_in(height_pt))
 
 
 @export
 def figsize(fraction: float = 1.0):
-    height_pt, width_pt = get_page_size()
-
-    width_in = convert_pt_to_in(width_pt) * fraction
-    height_in = width_in / GOLDEN_RATIO
-
-    max_height_in = convert_pt_to_in(height_pt) * fraction
-
-    if height_in > max_height_in:
-        width_in = width_in / max_height_in * height_in
-        height_in = max_height_in
-
-    return width_in, height_in
+    return _set_size(1, 1, fraction=fraction)
 
 
 @export
