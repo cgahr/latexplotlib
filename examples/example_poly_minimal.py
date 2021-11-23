@@ -15,5 +15,5 @@ plt.grid()
 plt.legend()
 plt.tight_layout()
 
-plt.savefig("example_poly")
-plt.savefig("example_poly.png")
+plt.savefig("example_poly_minimal")
+plt.savefig("example_poly_minimal.png")
