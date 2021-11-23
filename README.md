@@ -1,4 +1,4 @@
-# texplotlib
+# latexplotlib
 
 <a href="https://github.com/psf/black"><img alt="Code style: black" src="https://img.shields.io/badge/code%20style-black-000000.svg"></a>
 
@@ -14,7 +14,7 @@ figure. On the other hand, it provides some functions to create perfectly sized 
 These figures fit your latex document without scaling and have the correct font size for
 your document.
 
-### Texplotlib styles
+### latexplotlib styles
 
 There are 6 different styles for matplotlib.
 - `latex10pt`
@@ -67,7 +67,7 @@ plt.tight_layout()
 plt.savefig("example_poly")
 ```
 <p align="center">
-<img src="https://github.com/ConstantinGahr/texplotlib/blob/main/examples/example_poly.png?raw=true" width="500">
+<img src="https://github.com/ConstantinGahr/latexplotlib/blob/main/examples/example_poly.png?raw=true" width="500">
 </p>
 
 Style `latex10ptminimal`:
@@ -94,7 +94,7 @@ plt.savefig("example_poly_minimal")
 ```
 
 <p align="center">
-<img src="https://github.com/ConstantinGahr/texplotlib/blob/main/examples/example_poly_minimal.png?raw=true" width="500">
+<img src="https://github.com/ConstantinGahr/latexplotlib/blob/main/examples/example_poly_minimal.png?raw=true" width="500">
 </p>
 
 ### Get latex dimensions
@@ -110,7 +110,7 @@ The necessary dimension are found under `\textwidth` and `\textheight`.
 ### Set and get latex page size
 
 ```python
-from texplotlib import set_page_size, get_page_size
+from latexplotlib import set_page_size, get_page_size
 
 # set the page size in pt
 set_page_size(630, 412)
@@ -121,7 +121,7 @@ get_page_size()
 
 ### Create figures for latex
 ```python
-from texplotlib as figsize, subplots
+from latexplotlib as figsize, subplots
 import matplotlib.pyplot as plt
 
 

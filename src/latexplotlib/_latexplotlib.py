@@ -14,7 +14,7 @@ WIDTH = 412
 
 CONFIGFILE = "config.ini"
 
-NAME = "texplotlib"
+NAME = "latexplotlib"
 CONFIGDIR = user_config_dir(NAME)
 
 

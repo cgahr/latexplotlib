@@ -1,4 +1,4 @@
-"""Install texplotlib.
+"""Install latexplotlib.
 
 This script (setup.py) will copy the matplotlib styles (*.mplstyle) into the
 appropriate directory on your computer (OS dependent).

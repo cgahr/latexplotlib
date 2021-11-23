@@ -1,4 +1,4 @@
-name: texplotlib
+name: latexplotlib
 channels:
   - conda-forge
   - defaults
