@@ -126,8 +126,8 @@ def _set_size(nrows, ncols, fraction: float = 1.0, ratio: float = GOLDEN_RATIO):
 
 
 @export
-def figsize(fraction: float = 1.0):
-    return _set_size(1, 1, fraction=fraction)
+def figsize(fraction: float = 1.0, ratio: float = GOLDEN_RATIO):
+    return _set_size(1, 1, fraction=fraction, ratio=ratio)
 
 
 @export
@@ -147,7 +147,8 @@ def subplots(
         values larger then 1.0, the figure is to large to fit on the latex page without
         scaling it.
     ratio : float, optional
-        The ratio of figure width to figure height. Defaults to the golden ratio.
+        The ratio of figure width to figure height for each individual axis element.
+        Defaults to the golden ratio.
     **kwargs
         see help(plt.subplots)
 
