@@ -1,7 +1,6 @@
 import json
 from pathlib import Path
 
-import numpy as np
 import pytest
 from appdirs import user_config_dir
 
@@ -123,6 +122,22 @@ class TestSetSize:
         height = nrows * lpl._round(lpl.convert_pt_to_in(WIDTH / GOLDEN_RATIO))
 
         res_width, res_height = lpl._set_size(nrows, ncols, fraction=fraction)
+        assert res_width <= width * max(fraction, 1)
+        assert res_height <= height * max(fraction, 1)
+
+    @pytest.mark.parametrize("nrows", [1, 2])
+    @pytest.mark.parametrize("ncols", [1, 2])
+    @pytest.mark.parametrize("fraction", [0.5, 1.0, 2.0])
+    @pytest.mark.parametrize("ratio", [GOLDEN_RATIO, 1, 2])
+    def test_nrows_ncols_with_ratio(self, monkeypatch, nrows, ncols, fraction, ratio):
+        monkeypatch.setattr(lpl, "get_page_size", lambda: (WIDTH, HEIGHT))
+
+        width = ncols * lpl._round(lpl.convert_pt_to_in(WIDTH))
+        height = nrows * lpl._round(lpl.convert_pt_to_in(WIDTH / ratio))
+
+        res_width, res_height = lpl._set_size(
+            nrows, ncols, fraction=fraction, ratio=ratio
+        )
         assert res_width <= width * max(fraction, 1)
         assert res_height <= height * max(fraction, 1)
 

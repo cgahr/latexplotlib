@@ -106,7 +106,7 @@ def convert_pt_to_in(pts: int) -> float:
     return 12.0 * 249.0 / 250.0 / 864.0 * pts
 
 
-def _set_size(nrows, ncols, fraction: float = 1.0):
+def _set_size(nrows, ncols, fraction: float = 1.0, ratio: float = GOLDEN_RATIO):
     max_width_pt, max_height_pt = get_page_size()
 
     if fraction < 0:
@@ -116,7 +116,7 @@ def _set_size(nrows, ncols, fraction: float = 1.0):
     else:
         width_pt = max_width_pt * fraction
 
-    height_pt = width_pt / GOLDEN_RATIO * (nrows / ncols)
+    height_pt = width_pt / ratio * (nrows / ncols)
 
     if height_pt > max_height_pt:
         width_pt = width_pt * max_height_pt / height_pt
@@ -131,7 +131,9 @@ def figsize(fraction: float = 1.0):
 
 
 @export
-def subplots(*args, fraction: float = 1.0, **kwargs) -> Tuple[Any, Any]:
+def subplots(
+    *args, fraction: float = 1.0, ratio=GOLDEN_RATIO, **kwargs
+) -> Tuple[Any, Any]:
     """A wrapper for matplotlib's 'plt.subplots' method
 
     This function wraps 'plt.subplots'
@@ -144,6 +146,8 @@ def subplots(*args, fraction: float = 1.0, **kwargs) -> Tuple[Any, Any]:
         The fraction of of horizontal or vertical space to be used for the figure. For
         values larger then 1.0, the figure is to large to fit on the latex page without
         scaling it.
+    ratio : float, optional
+        The ratio of figure width to figure height. Defaults to the golden ratio.
     **kwargs
         see help(plt.subplots)
 
@@ -172,5 +176,8 @@ def subplots(*args, fraction: float = 1.0, **kwargs) -> Tuple[Any, Any]:
         ncols = args[1]
 
     return plt.subplots(  # type: ignore
-        nrows, ncols, figsize=_set_size(nrows, ncols, fraction=fraction), **kwargs
+        nrows,
+        ncols,
+        figsize=_set_size(nrows, ncols, fraction=fraction, ratio=ratio),
+        **kwargs
     )

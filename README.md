@@ -130,6 +130,9 @@ _ = plt.figure(figsize=figsize(fraction=0.75))
 
 # A subplot filling 80% of the latex page
 fig, axes = subplots(3, 2, fraction=0.8)
+
+# A subplot for 3 square plots
+fig, axes = subplots(1, 3, fraction=0.8, ratio=3)
 ```
 
 
