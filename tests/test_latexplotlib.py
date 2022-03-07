@@ -16,12 +16,12 @@ NAME = "latexplotlib"
 
 
 def test_constants():
-    assert lpl.GOLDEN_RATIO == GOLDEN_RATIO
-    assert lpl.HEIGHT == HEIGHT
-    assert lpl.WIDTH == WIDTH
-    assert lpl.CONFIGFILE == CONFIGFILE
-    assert lpl.NAME == NAME
-    assert lpl.CONFIGDIR == Path(user_config_dir(NAME))
+    assert lpl.GOLDEN_RATIO
+    assert lpl.CONFIGFILE
+    assert lpl.NAME
+    assert lpl.CONFIGDIR
+    assert lpl.CONFIGPATH
+    assert lpl.DEFAULT_CONFIG
     assert lpl.CONFIGPATH == lpl.CONFIGDIR.joinpath(CONFIGFILE)
 
 
@@ -30,6 +30,77 @@ def test__round(value):
     assert int(10 * value) / 10 == lpl._round(value)
 
 
+class Test_Config:
+    @pytest.fixture
+    def default(self):
+        return {"apple": 10, "egg": 1}
+
+    @pytest.fixture
+    def config(self, default, tmp_path, monkeypatch):
+        monkeypatch.setattr(lpl, "DEFAULT_CONFIG", default)
+        return lpl._Config(tmp_path.joinpath("tmp.ini"))
+
+    def test___init__(self, tmp_path):
+        path = tmp_path.joinpath("tmp.ini")
+        config = lpl._Config(path)
+
+        assert config.path == path
+
+    def test_write(self, config, default):
+        config._write(default)
+
+        assert os.path.exists(config.path)
+
+        with open(config.path, "r", encoding="utf-8") as fh:
+            cfg = json.load(fh)
+        assert cfg == default
+
+    def test_reset(self, config, default, mocker):
+        default = {"apple": 10, "egg": 1}
+        config._write(default)
+        assert os.path.exists(config.path)
+
+        mocker.patch.object(config, "_write")
+
+        config.reset()
+
+        assert not os.path.exists(config.path)
+        config._write.assert_called_once_with(default)
+
+    def test__config_with_reset(self, config, default, mocker):
+        mocker.spy(config, "reset")
+        assert not os.path.exists(config.path)
+
+        cfg = config._config()
+
+        config.reset.assert_called_once_with()
+        assert cfg == default
+
+    def test__config_wo_reset(self, config, default, mocker):
+        config._write(default)
+        mocker.spy(config, "reset")
+        assert os.path.exists(config.path)
+
+        cfg = config._config()
+
+        config.reset.assert_not_called()
+        assert cfg == default
+
+    def test___getitem__(self, config, default):
+        config.reset()
+
+        for key, item in default.items():
+            assert config[key] == item
+
+    def test___setitem__(self, config, default):
+        config.reset()
+
+        config["skyscraper"] = "apple"
+
+        assert config["skyscraper"] == "apple"
+
+
+@pytest.mark.skip(reason="Deprecated")
 class TestSetPageSize:
     def test_dir_exists(self, monkeypatch, tmp_path):
         configpath = tmp_path.joinpath("tmp.ini")
@@ -59,6 +130,7 @@ class TestSetPageSize:
         assert config["width"] == WIDTH
 
 
+@pytest.mark.skip(reason="Deprecated")
 class TestGetPageSize:
     def test_file_exists(self, monkeypatch, tmp_path):
         configpath = tmp_path.joinpath("tmp.ini")
@@ -85,6 +157,7 @@ class TestGetPageSize:
         assert width == WIDTH
 
 
+@pytest.mark.skip(reason="Deprecated")
 class TestResetPageSize:
     def test_exists(self, monkeypatch, tmp_path):
         configpath = tmp_path.joinpath("tmp.ini")

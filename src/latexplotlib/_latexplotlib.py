@@ -1,3 +1,4 @@
+__all__ = []
 import json
 import os
 import sys
@@ -18,6 +19,7 @@ CONFIGFILE = "config.ini"
 NAME = "latexplotlib"
 CONFIGDIR = Path(user_config_dir(NAME))
 CONFIGPATH = CONFIGDIR.joinpath(CONFIGFILE)
+DEFAULT_CONFIG = {"width": 630, "height": 412}
 
 
 def export(fun: Callable):  # type: ignore
@@ -85,6 +87,39 @@ def reset_page_size():
         os.remove(CONFIGPATH)
 
 
+class _Config:
+    def __init__(self, path):
+        self.path = path
+
+    def _config(self) -> dict[str, Any]:
+        if not os.path.exists(self.path):
+            self.reset()
+
+        with open(self.path, "r", encoding="utf-8") as fh:
+            cfg: dict[str, Any] = json.load(fh)
+            return cfg
+
+    def _write(self, cfg: dict[str, Any]):
+        with open(self.path, "w", encoding="utf-8") as fh:
+            json.dump(cfg, fh, indent=4)
+
+    def __getitem__(self, name):
+        return self._config()[name]
+
+    def __setitem__(self, name, value):
+        cfg = self._config()
+        cfg[name] = value
+        self._write(cfg)
+
+    def reset(self):
+        if os.path.exists(self.path):
+            os.remove(self.path)
+
+        self._write(DEFAULT_CONFIG)
+
+
+config = _Config(CONFIGPATH)
+__all__.append("config")
 @export
 def convert_pt_to_in(pts: int) -> float:
     """Converts a length in pts to a length in inches.
