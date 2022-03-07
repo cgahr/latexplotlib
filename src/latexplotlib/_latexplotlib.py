@@ -38,12 +38,12 @@ def set_page_size(
     width: int,
     height: int,
 ):
-    """Sets to size of the latex page in pts.
+    """Sets the size of the latex page in pts.
 
-    You can find the size of the latex page under point 7 and 8 from
+    You can find the size of the latex page with the following commands:
 
-    \\usepackage{layout}
-    \\layout*
+    \\the\\textwidth
+    \\the\\textheight
 
     Parameters
     ----------
