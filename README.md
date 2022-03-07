@@ -48,23 +48,28 @@ Style `latex10pt`:
 ```python
 import matplotlib.pyplot as plt
 import numpy as np
+import latexplotlib as lpl
 
 
 plt.style.use("latex10pt")
+
+# lpl.size.set(200, 400)
+with lpl.size.context(200, 400):
+    fig, ax = lpl.subplots(1, 1)
 
 x = np.linspace(1, 5, 100)
 
 for t in range(4):
     label = f"$x^{t}$"
-    plt.plot(x, x ** t, label=label)
+    ax.plot(x, x ** t, label=label)
 
-plt.yscale("log")
-plt.title("Perfect matplotlib figures for \\LaTeX")
-plt.grid()
-plt.legend()
-plt.tight_layout()
+ax.set_yscale("log")
+ax.set_title("Perfect matplotlib figures for \\LaTeX")
+ax.grid()
 
-plt.savefig("example_poly")
+fig.legend()
+fig.savefig("example_poly")
+fig.savefig("example_poly.png")
 ```
 <p align="center">
 <img src="https://github.com/ConstantinGahr/latexplotlib/blob/main/examples/example_poly.png?raw=true" width="500">
@@ -75,22 +80,26 @@ Style `latex10ptminimal`:
 import matplotlib.pyplot as plt
 import numpy as np
 
+import latexplotlib as lpl
 
 plt.style.use("latex10pt-minimal")
+# lpl.size.set(200, 400)
+with lpl.size.context(200, 400):
+    fig, ax = lpl.subplots(1, 1)
 
 x = np.linspace(1, 5, 100)
 
 for t in range(4):
     label = f"$x^{t}$"
-    plt.plot(x, x ** t, label=label)
+    ax.plot(x, x ** t, label=label)
 
-plt.yscale("log")
-plt.title("Perfect matplotlib figures for \\LaTeX")
-plt.grid()
-plt.legend()
-plt.tight_layout()
+ax.set_yscale("log")
+ax.set_title("Perfect matplotlib figures for \\LaTeX")
+ax.grid()
 
+fig.legend()
 plt.savefig("example_poly_minimal")
+plt.savefig("example_poly_minimal.png")
 ```
 
 <p align="center">
@@ -101,38 +110,39 @@ plt.savefig("example_poly_minimal")
 You can find the dimensions of your document using the following command:
 
 ```latex
-\usepackage{layout}
+\the\textwidth
 
-\layout
+\the\textheight
 ```
-The necessary dimension are found under `\textwidth` and `\textheight`.
 
 ### Set and get latex page size
 
 ```python
-from latexplotlib import set_page_size, get_page_size
+import latexplotlib as lpl
 
-# set the page size in pt
-set_page_size(630, 412)
+lpl.size.set(200, 400)
 
-get_page_size()
-# (630, 412)
+with lpl.size.context(200, 400):
+    pass
+
+lpl.size()  # (200, 400)
 ```
 
 ### Create figures for latex
 ```python
-from latexplotlib as figsize, subplots
 import matplotlib.pyplot as plt
+
+import latexplotlib as lpl
 
 
 # A figure filling 75% of the latex page
-_ = plt.figure(figsize=figsize(fraction=0.75))
+_ = plt.figure(figsize=lpl.figsize(fraction=0.75))
 
 # A subplot filling 80% of the latex page
-fig, axes = subplots(3, 2, fraction=0.8)
+fig, axes = lpl.subplots(3, 2, fraction=0.8)
 
 # A subplot for 3 square plots next to each other
-fig, axes = subplots(1, 3, fraction=0.8, ratio=1)
+fig, axes = lpl.subplots(1, 3, fraction=0.8, ratio=1)
 ```
 
 
