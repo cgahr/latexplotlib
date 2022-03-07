@@ -1,4 +1,5 @@
 import json
+import os
 from pathlib import Path
 
 import pytest
@@ -22,7 +23,6 @@ def test_constants():
     assert lpl.CONFIGDIR
     assert lpl.CONFIGPATH
     assert lpl.DEFAULT_CONFIG
-    assert lpl.CONFIGPATH == lpl.CONFIGDIR.joinpath(CONFIGFILE)
 
 
 @pytest.mark.parametrize("value", [123.234, 23.4576585, 234])
@@ -98,6 +98,43 @@ class Test_Config:
         config["skyscraper"] = "apple"
 
         assert config["skyscraper"] == "apple"
+
+
+class Test_Size:
+    @pytest.fixture
+    def config(self, monkeypatch):
+        monkeypatch.setattr(lpl, "config", {"width": 10, "height": 20})
+
+    @pytest.fixture
+    def size(self):
+        return lpl._Size()
+
+    def test___init__(self, config):
+        size = lpl._Size()
+
+        assert size._width == 10
+        assert size._height == 20
+
+    def test_get(self, config, size):
+        assert size.get() == (10, 20)
+
+    def test_set(self, config, size):
+        size.set(43, 44)
+        assert size.get() == (43, 44)
+
+    def test_context(self, config, size):
+        assert size.get() == (10, 20)
+
+        with size.context(44, 43):
+            assert size.get() == (44, 43)
+
+        assert size.get() == (10, 20)
+
+    def test_str(self, size):
+        str(size)
+
+    def test_repr(self, size):
+        repr(size)
 
 
 @pytest.mark.skip(reason="Deprecated")

@@ -1,22 +1,24 @@
 __all__ = []
+
+
 import json
 import os
 import sys
 import warnings
+from contextlib import contextmanager
 from pathlib import Path
 from typing import Any, Callable, Tuple
 
+import deprecation
 import matplotlib.pyplot as plt
 from appdirs import user_config_dir
 
-GOLDEN_RATIO = (5 ** 0.5 + 1) / 2
+from ._version import __version__
 
-HEIGHT = 630
-WIDTH = 412
+GOLDEN_RATIO = (5 ** 0.5 + 1) / 2
+NAME = "latexplotlib"
 
 CONFIGFILE = "config.ini"
-
-NAME = "latexplotlib"
 CONFIGDIR = Path(user_config_dir(NAME))
 CONFIGPATH = CONFIGDIR.joinpath(CONFIGFILE)
 DEFAULT_CONFIG = {"width": 630, "height": 412}
@@ -36,6 +38,12 @@ def _round(val: float) -> float:
 
 
 @export
+@deprecation.deprecated(
+    deprecated_in="0.3",
+    removed_in="0.4",
+    current_version=__version__,
+    details="Obsolete, use 'lpl.size.set' instead.",
+)
 def set_page_size(
     width: int,
     height: int,
@@ -64,6 +72,12 @@ def set_page_size(
 
 
 @export
+@deprecation.deprecated(
+    deprecated_in="0.3",
+    removed_in="0.4",
+    current_version=__version__,
+    details="Obsolete, use 'lpl.size.get' instead.",
+)
 def get_page_size() -> Tuple[int, int]:
     """The size of the latex page in pts.
 
@@ -77,11 +91,17 @@ def get_page_size() -> Tuple[int, int]:
             config = json.load(cfg)
     except FileNotFoundError:
         warnings.warn("Page size not set, using defaults (see 'set_page_dimension').")
-        return WIDTH, HEIGHT
+        return 630, 412
     return (config["width"], config["height"])
 
 
 @export
+@deprecation.deprecated(
+    deprecated_in="0.3",
+    removed_in="0.4",
+    current_version=__version__,
+    details="Obsolete, use 'lpl.size.reset' instead.",
+)
 def reset_page_size():
     if os.path.exists(CONFIGPATH):
         os.remove(CONFIGPATH)
@@ -120,6 +140,68 @@ class _Config:
 
 config = _Config(CONFIGPATH)
 __all__.append("config")
+
+
+class _Size:
+    def __init__(self):
+        self._width, self._height = config["width"], config["height"]
+
+    def get(self):
+        """Returns the current size of the figure in pts.
+
+        Returns
+        -------
+        int, int
+            (width, height) of the page in pts.
+        """
+        return self._width, self._height
+
+    def set(self, width: int, height: int):
+        """Sets the size of the latex page in pts.
+
+        You can find the size of the latex page with the following commands:
+
+        \\the\\textwidth
+        \\the\\textheight
+
+        Parameters
+        ----------
+        width : int
+            The width of the latex page in pts.
+        height : int
+            The height of the latex page in pts.
+        """
+        config["width"], config["height"] = width, height
+        self._width, self._height = width, height
+
+    @contextmanager
+    def context(self, width: int, height: int):
+        """This context manager temporarily sets the size of the figure in pts.
+
+        Parameters
+        ----------
+        width : int
+            The width of the latex page in pts.
+        height : int
+            The height of the latex page in pts.
+        """
+        _width, _height = self._width, self._height
+        self._width, self._height = width, height
+        yield
+
+        self._width, self._height = _width, _height
+
+    def __str__(self):
+        return str((self._width, self._height))
+
+    def __repr__(self):
+        return repr((self._width, self._height))
+
+
+size = _Size()
+__all__.append("size")
+
+
 @export
 def convert_pt_to_in(pts: int) -> float:
     """Converts a length in pts to a length in inches.
@@ -146,7 +228,8 @@ def _set_size(nrows, ncols, fraction: float = 1.0, ratio: float = GOLDEN_RATIO):
 
     if fraction < 0:
         raise ValueError("fraction must be positive!")
-    elif fraction > 1:
+
+    if fraction > 1:
         width_pt = max_width_pt
     else:
         width_pt = max_width_pt * fraction
