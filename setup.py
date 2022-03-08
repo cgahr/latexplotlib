@@ -52,7 +52,6 @@ class PostInstallMoveFile(install):
 
 setup(
     version=version,
-    install_requires=["appdirs", "matplotlib"],
     cmdclass={
         "install": PostInstallMoveFile,
     },
