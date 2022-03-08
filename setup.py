@@ -52,16 +52,9 @@ class PostInstallMoveFile(install):
 
 setup(
     version=version,
-    license="MIT",
-    keywords=[
-        "matplotlib-style-sheets",
-        "matplotlib-figures",
-        "latex",
-        "matplotlib-styles",
-        "python",
-    ],
     install_requires=["appdirs", "matplotlib"],
     cmdclass={
         "install": PostInstallMoveFile,
     },
+    package_data={"latexplotlib": ["py.typed"]},
 )

@@ -1,13 +1,10 @@
-__all__ = []
-
-
 import json
 import os
 import sys
 import warnings
 from contextlib import contextmanager
 from pathlib import Path
-from typing import Any, Callable, Tuple
+from typing import Any, Optional, Tuple
 
 import deprecation
 import matplotlib.pyplot as plt
@@ -15,22 +12,36 @@ from appdirs import user_config_dir
 
 from ._version import __version__
 
-GOLDEN_RATIO = (5**0.5 + 1) / 2
-NAME = "latexplotlib"
+GOLDEN_RATIO: float = (5 ** 0.5 + 1) / 2
+NAME: str = "latexplotlib"
 
-CONFIGFILE = "config.ini"
-CONFIGDIR = Path(user_config_dir(NAME))
-CONFIGPATH = CONFIGDIR.joinpath(CONFIGFILE)
-DEFAULT_CONFIG = {"width": 630, "height": 412}
+CONFIGFILE: str = "config.ini"
+CONFIGDIR: Path = Path(user_config_dir(NAME))
+CONFIGPATH: Path = CONFIGDIR.joinpath(CONFIGFILE)
+DEFAULT_CONFIG: dict[str, int] = {"width": 630, "height": 412}
 
 
-def export(fun: Callable):  # type: ignore
-    mod = sys.modules[fun.__module__]
+# __all__ = [
+#     "set_page_size",
+#     "get_page_size",
+#     "reset_page_size",
+#     "config",
+#     "size",
+#     "convert_pt_to_in",
+#     "figsize",
+#     "subplots",
+# ]
+
+
+def export(sth: Any, name: Optional[str] = None):  # type: ignore
+    mod = sys.modules[sth.__module__]
+    name = name if name is not None else sth.__name__
+
     if hasattr(mod, "__all__"):
-        mod.__all__.append(fun.__name__)  # type: ignore
+        mod.__all__.append(name)  # type: ignore
     else:
-        mod.__all__ = [fun.__name__]  # type: ignore
-    return fun
+        mod.__all__ = [name]  # type: ignore
+    return sth
 
 
 def _round(val: float) -> float:
@@ -139,7 +150,8 @@ class Config:
 
 
 config = Config(CONFIGPATH)
-__all__.append("config")
+export(config, "config")
+
 
 class Size:
     _width: int
@@ -201,7 +213,7 @@ class Size:
 
 
 size = Size()
-__all__.append("size")
+export(size, "size")
 
 
 @export

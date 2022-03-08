@@ -10,7 +10,7 @@ testpaths = [
 # filterwarnings = ignore::DeprecationWarning
 
 [tool.mypy]
-exclude = "build"
+exclude = ["build", "tests", "examples"]
 mypy_path = "src"
 check_untyped_defs = true
 disallow_any_generics = true
