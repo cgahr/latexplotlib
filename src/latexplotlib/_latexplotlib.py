@@ -12,7 +12,7 @@ from appdirs import user_config_dir
 
 from ._version import __version__
 
-GOLDEN_RATIO: float = (5 ** 0.5 + 1) / 2
+GOLDEN_RATIO: float = (5**0.5 + 1) / 2
 NAME: str = "latexplotlib"
 
 CONFIGFILE: str = "config.ini"

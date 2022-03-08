@@ -13,7 +13,7 @@ x = np.linspace(1, 5, 100)
 
 for t in range(4):
     label = f"$x^{t}$"
-    ax.plot(x, x ** t, label=label)
+    ax.plot(x, x**t, label=label)
 
 ax.set_yscale("log")
 ax.set_title("Perfect matplotlib figures for \\LaTeX")
