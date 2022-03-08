@@ -21,18 +21,6 @@ CONFIGPATH: Path = CONFIGDIR.joinpath(CONFIGFILE)
 DEFAULT_CONFIG: dict[str, int] = {"width": 630, "height": 412}
 
 
-# __all__ = [
-#     "set_page_size",
-#     "get_page_size",
-#     "reset_page_size",
-#     "config",
-#     "size",
-#     "convert_pt_to_in",
-#     "figsize",
-#     "subplots",
-# ]
-
-
 def export(sth: Any, name: Optional[str] = None):  # type: ignore
     mod = sys.modules[sth.__module__]
     name = name if name is not None else sth.__name__
@@ -238,15 +226,15 @@ def convert_pt_to_in(pts: int) -> float:
 
 
 def _set_size(nrows, ncols, fraction: float = 1.0, ratio: float = GOLDEN_RATIO):
-    max_width_pt, max_height_pt = get_page_size()
+    max_width_pt, max_height_pt = size.get()
 
     if fraction < 0:
         raise ValueError("fraction must be positive!")
 
     if fraction > 1:
-        width_pt = max_width_pt
+        width_pt: float = float(max_width_pt)
     else:
-        width_pt = max_width_pt * fraction
+        width_pt = float(max_width_pt) * fraction
 
     height_pt = width_pt / ratio * (nrows / ncols)
 
