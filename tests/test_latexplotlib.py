@@ -1,13 +1,11 @@
 import json
 import os
-from pathlib import Path
 
 import pytest
-from appdirs import user_config_dir
 
 from latexplotlib import _latexplotlib as lpl
 
-GOLDEN_RATIO = (5 ** 0.5 + 1) / 2
+GOLDEN_RATIO = (5**0.5 + 1) / 2
 HEIGHT = 630
 WIDTH = 412
 
@@ -38,11 +36,11 @@ class Test_Config:
     @pytest.fixture
     def config(self, default, tmp_path, monkeypatch):
         monkeypatch.setattr(lpl, "DEFAULT_CONFIG", default)
-        return lpl._Config(tmp_path.joinpath("tmp.ini"))
+        return lpl.Config(tmp_path.joinpath("tmp.ini"))
 
     def test___init__(self, tmp_path):
         path = tmp_path.joinpath("tmp.ini")
-        config = lpl._Config(path)
+        config = lpl.Config(path)
 
         assert config.path == path
 
@@ -107,10 +105,10 @@ class Test_Size:
 
     @pytest.fixture
     def size(self):
-        return lpl._Size()
+        return lpl.Size()
 
     def test___init__(self, config):
-        size = lpl._Size()
+        size = lpl.Size()
 
         assert size._width == 10
         assert size._height == 20

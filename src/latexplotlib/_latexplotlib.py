@@ -15,7 +15,7 @@ from appdirs import user_config_dir
 
 from ._version import __version__
 
-GOLDEN_RATIO = (5 ** 0.5 + 1) / 2
+GOLDEN_RATIO = (5**0.5 + 1) / 2
 NAME = "latexplotlib"
 
 CONFIGFILE = "config.ini"
@@ -107,8 +107,8 @@ def reset_page_size():
         os.remove(CONFIGPATH)
 
 
-class _Config:
-    def __init__(self, path):
+class Config:
+    def __init__(self, path: Path):
         self.path = path
 
     def _config(self) -> dict[str, Any]:
@@ -123,10 +123,10 @@ class _Config:
         with open(self.path, "w", encoding="utf-8") as fh:
             json.dump(cfg, fh, indent=4)
 
-    def __getitem__(self, name):
+    def __getitem__(self, name: str) -> Any:
         return self._config()[name]
 
-    def __setitem__(self, name, value):
+    def __setitem__(self, name: str, value: int):
         cfg = self._config()
         cfg[name] = value
         self._write(cfg)
@@ -138,15 +138,17 @@ class _Config:
         self._write(DEFAULT_CONFIG)
 
 
-config = _Config(CONFIGPATH)
+config = Config(CONFIGPATH)
 __all__.append("config")
 
+class Size:
+    _width: int
+    _height: int
 
-class _Size:
     def __init__(self):
         self._width, self._height = config["width"], config["height"]
 
-    def get(self):
+    def get(self) -> tuple[int, int]:
         """Returns the current size of the figure in pts.
 
         Returns
@@ -198,7 +200,7 @@ class _Size:
         return repr((self._width, self._height))
 
 
-size = _Size()
+size = Size()
 __all__.append("size")
 
 
