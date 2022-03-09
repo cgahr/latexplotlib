@@ -122,8 +122,8 @@ import latexplotlib as lpl
 
 lpl.size.set(200, 400)
 
-with lpl.size.context(200, 400):
-    pass
+with lpl.size.context(100, 200):
+    lpl.size()  # 100, 200
 
 lpl.size()  # (200, 400)
 ```
@@ -143,6 +143,24 @@ fig, axes = lpl.subplots(3, 2, fraction=0.8)
 
 # A subplot for 3 square plots next to each other
 fig, axes = lpl.subplots(1, 3, fraction=0.8, ratio=1)
+```
+
+### `ratio` keyword
+The `ratio` keyword control the ratio of height to width. The default is the Golden ratio. `ratio` can also be `max` or `any`. In this case, the figure fills the available space.
+```python
+import matplotlib.pyplot as plt
+
+import latexplotlib as lpl
+
+# A 3 by 2 figure where each subplots height to width ratio is the golden ratio
+fig, axes = lpl.subplots(3, 2)
+
+# A 3 by 2 figure where each subplot having a height to width ratio of 1:1
+fig, axes = lpl.subplots(3, 2, ratio=1.0)
+
+# A figure that is exactly 300pt height and 200pt wide
+with lpl.size.context(200, 300):
+    fig, axes = lpl.subplots(3, 2, ratio"max")
 ```
 
 
