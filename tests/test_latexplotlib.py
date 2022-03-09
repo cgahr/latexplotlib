@@ -6,8 +6,8 @@ import pytest
 from latexplotlib import _latexplotlib as lpl
 
 GOLDEN_RATIO = (5**0.5 + 1) / 2
-HEIGHT = 630
-WIDTH = 412
+HEIGHT = 96978
+WIDTH = 3453547
 
 CONFIGFILE = "config.ini"
 
@@ -220,12 +220,15 @@ def test_convert_pt_to_in():
 
 
 class TestSetSize:
+    def setup_function(self, monkeypatch, mocker):
+        size = mocker.MagicMock()
+        size.get = mocker.MagicMock(return_value=(WIDTH, HEIGHT))
+        monkeypatch.setattr(lpl, "size", size)
+
     @pytest.mark.parametrize("nrows", [1, 2, 3])
     @pytest.mark.parametrize("ncols", [1, 2, 3])
     @pytest.mark.parametrize("fraction", [0.5, 1.0, 2.0])
-    def test_nrows_ncols(self, monkeypatch, nrows, ncols, fraction):
-        monkeypatch.setattr(lpl, "get_page_size", lambda: (WIDTH, HEIGHT))
-
+    def test_nrows_ncols(self, nrows, ncols, fraction):
         width = ncols * lpl._round(lpl.convert_pt_to_in(WIDTH))
         height = nrows * lpl._round(lpl.convert_pt_to_in(WIDTH / GOLDEN_RATIO))
 
@@ -237,9 +240,7 @@ class TestSetSize:
     @pytest.mark.parametrize("ncols", [1, 2])
     @pytest.mark.parametrize("fraction", [0.5, 1.0, 2.0])
     @pytest.mark.parametrize("ratio", [GOLDEN_RATIO, 1, 2])
-    def test_nrows_ncols_with_ratio(self, monkeypatch, nrows, ncols, fraction, ratio):
-        monkeypatch.setattr(lpl, "get_page_size", lambda: (WIDTH, HEIGHT))
-
+    def test_nrows_ncols_with_ratio(self, nrows, ncols, fraction, ratio):
         width = ncols * lpl._round(lpl.convert_pt_to_in(WIDTH))
         height = nrows * lpl._round(lpl.convert_pt_to_in(WIDTH / ratio))
 
@@ -252,6 +253,25 @@ class TestSetSize:
     def test_negative_fraction(self):
         with pytest.raises(ValueError):
             lpl._set_size(1, 1, fraction=-1)
+
+    @pytest.mark.parametrize("nrows", [1, 2])
+    @pytest.mark.parametrize("ncols", [1, 2])
+    @pytest.mark.parametrize("fraction", [0.5, 1.0, 2.0])
+    @pytest.mark.parametrize("ratio", ["any", "max"])
+    def test_str_ratio(self, nrows, ncols, fraction, ratio):
+        width = ncols * lpl._round(lpl.convert_pt_to_in(WIDTH))
+        height = nrows * lpl._round(lpl.convert_pt_to_in(WIDTH))
+
+        res_width, res_height = lpl._set_size(
+            nrows, ncols, fraction=fraction, ratio=ratio
+        )
+        assert res_width <= width * max(fraction, 1)
+        assert res_height <= height * max(fraction, 1)
+
+    @pytest.mark.parametrize("ratio", ["test", "asd", "min"])
+    def test_invalid_ratio(self, ratio):
+        with pytest.raises(ValueError):
+            lpl._set_size(1, 1, ratio=ratio)
 
 
 @pytest.mark.parametrize("fraction", [0.1, 0.5, 0.9, 1.0])

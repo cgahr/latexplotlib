@@ -4,7 +4,7 @@ import sys
 import warnings
 from contextlib import contextmanager
 from pathlib import Path
-from typing import Any, Optional, Tuple
+from typing import Any, Optional, Tuple, Union
 
 import deprecation
 import matplotlib.pyplot as plt
@@ -225,22 +225,27 @@ def convert_pt_to_in(pts: int) -> float:
     return 12.0 * 249.0 / 250.0 / 864.0 * pts
 
 
-def _set_size(nrows, ncols, fraction: float = 1.0, ratio: float = GOLDEN_RATIO):
+def _set_size(
+    nrows, ncols, fraction: float = 1.0, ratio: Union[float, str] = GOLDEN_RATIO
+):
+    EXCEPTION_STR = "fraction must be positive or 'any' or 'max'."
+    if fraction < 0 or (isinstance(ratio, str) and ratio not in ["any", "max"]):
+        raise ValueError(EXCEPTION_STR)
+
     max_width_pt, max_height_pt = size.get()
 
-    if fraction < 0:
-        raise ValueError("fraction must be positive!")
+    fraction = max(fraction, 1)
 
-    if fraction > 1:
-        width_pt: float = float(max_width_pt)
+    if isinstance(ratio, str):
+        width_pt, height_pt = fraction * max_width_pt, fraction * max_height_pt
     else:
-        width_pt = float(max_width_pt) * fraction
+        width_pt = max_width_pt * fraction
 
-    height_pt = width_pt / ratio * (nrows / ncols)
+        height_pt = width_pt / ratio * (nrows / ncols)
 
-    if height_pt > max_height_pt:
-        width_pt = width_pt * max_height_pt / height_pt
-        height_pt = max_height_pt
+        if height_pt > max_height_pt:
+            width_pt = width_pt * max_height_pt / height_pt
+            height_pt = max_height_pt
 
     return _round(convert_pt_to_in(width_pt)), _round(convert_pt_to_in(height_pt))
 
@@ -252,7 +257,7 @@ def figsize(fraction: float = 1.0, ratio: float = GOLDEN_RATIO):
 
 @export
 def subplots(
-    *args, fraction: float = 1.0, ratio=GOLDEN_RATIO, **kwargs
+    *args, fraction: float = 1.0, ratio: Union[float, str] = GOLDEN_RATIO, **kwargs
 ) -> Tuple[Any, Any]:
     """A wrapper for matplotlib's 'plt.subplots' method
 
