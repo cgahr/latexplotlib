@@ -4,7 +4,7 @@ import sys
 import warnings
 from contextlib import contextmanager
 from pathlib import Path
-from typing import Any, Optional, Tuple, Union
+from typing import Any, Dict, Optional, Tuple, Union
 
 import deprecation
 import matplotlib.pyplot as plt
@@ -18,7 +18,7 @@ NAME: str = "latexplotlib"
 CONFIGFILE: str = "config.ini"
 CONFIGDIR: Path = Path(user_config_dir(NAME))
 CONFIGPATH: Path = CONFIGDIR.joinpath(CONFIGFILE)
-DEFAULT_CONFIG: dict[str, int] = {"width": 630, "height": 412}
+DEFAULT_CONFIG: Dict[str, int] = {"width": 630, "height": 412}
 
 
 def export(sth: Any, name: Optional[str] = None):  # type: ignore
@@ -110,15 +110,15 @@ class Config:
     def __init__(self, path: Path):
         self.path = path
 
-    def _config(self) -> dict[str, Any]:
+    def _config(self) -> Dict[str, Any]:
         if not os.path.exists(self.path):
             self.reset()
 
         with open(self.path, "r", encoding="utf-8") as fh:
-            cfg: dict[str, Any] = json.load(fh)
+            cfg: Dict[str, Any] = json.load(fh)
             return cfg
 
-    def _write(self, cfg: dict[str, Any]):
+    def _write(self, cfg: Dict[str, Any]):
         with open(self.path, "w", encoding="utf-8") as fh:
             json.dump(cfg, fh, indent=4)
 
@@ -148,7 +148,7 @@ class Size:
     def __init__(self):
         self._width, self._height = config["width"], config["height"]
 
-    def get(self) -> tuple[int, int]:
+    def get(self) -> Tuple[int, int]:
         """Returns the current size of the figure in pts.
 
         Returns
