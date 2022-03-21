@@ -36,7 +36,12 @@ class Test_Config:
     @pytest.fixture
     def config(self, default, tmp_path, monkeypatch):
         monkeypatch.setattr(lpl, "DEFAULT_CONFIG", default)
-        return lpl.Config(tmp_path.joinpath("tmp.ini"))
+        return lpl.Config(tmp_path.joinpath("directory", "tmp.ini"))
+
+    def test__ensure_path_exists(self, tmp_path):
+        lpl.Config._ensure_path_exists(tmp_path)
+
+        assert tmp_path.exists()
 
     def test___init__(self, tmp_path):
         path = tmp_path.joinpath("tmp.ini")

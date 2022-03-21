@@ -107,7 +107,13 @@ def reset_page_size():
 
 
 class Config:
+    @classmethod
+    def _ensure_path_exists(cls, path: Path):
+        if not path.parent.exists():
+            path.parent.mkdir()
+
     def __init__(self, path: Path):
+        self._ensure_path_exists(path)
         self.path = path
 
     def _config(self) -> Dict[str, Any]:
@@ -223,6 +229,27 @@ def convert_pt_to_in(pts: int) -> float:
     - https://www.overleaf.com/learn/latex/Lengths_in_LaTeX
     """
     return 12.0 * 249.0 / 250.0 / 864.0 * pts
+
+
+@export
+def convert_in_to_to(inches: float) -> float:
+    """Converts a length in inch to a length in pt.
+
+    Parameters
+    ----------
+    inches : float
+        A length in inches.
+
+    Returns
+    -------
+    float
+        A length in pts.
+
+    References
+    ----------
+    - https://www.overleaf.com/learn/latex/Lengths_in_LaTeX
+    """
+    return inches * 864.0 * 250.0 / 249.0 / 12.0
 
 
 def _set_size(
