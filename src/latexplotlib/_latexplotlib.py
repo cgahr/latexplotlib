@@ -6,11 +6,8 @@ from contextlib import contextmanager
 from pathlib import Path
 from typing import Any, Dict, Optional, Tuple, Union
 
-import deprecation
 import matplotlib.pyplot as plt
 from appdirs import user_config_dir
-
-from ._version import __version__
 
 GOLDEN_RATIO: float = (5**0.5 + 1) / 2
 NAME: str = "latexplotlib"
@@ -34,76 +31,6 @@ def export(sth: Any, name: Optional[str] = None):  # type: ignore
 
 def _round(val: float) -> float:
     return int(10 * val) / 10
-
-
-@export
-@deprecation.deprecated(
-    deprecated_in="0.3",
-    removed_in="0.4",
-    current_version=__version__,
-    details="Obsolete, use 'lpl.size.set' instead.",
-)
-def set_page_size(
-    width: int,
-    height: int,
-):
-    """Sets the size of the latex page in pts.
-
-    You can find the size of the latex page with the following commands:
-
-    \\the\\textwidth
-    \\the\\textheight
-
-    Parameters
-    ----------
-    width : int
-        The width of the latex page in pts.
-    height : int
-        The height of the latex page in pts.
-    """
-    try:
-        os.makedirs(CONFIGDIR)
-    except FileExistsError:
-        pass
-
-    with open(CONFIGPATH, "w", encoding="utf-8") as cfg:
-        json.dump({"width": width, "height": height}, cfg, indent=4)
-
-
-@export
-@deprecation.deprecated(
-    deprecated_in="0.3",
-    removed_in="0.4",
-    current_version=__version__,
-    details="Obsolete, use 'lpl.size.get' instead.",
-)
-def get_page_size() -> Tuple[int, int]:
-    """The size of the latex page in pts.
-
-    Returns
-    -------
-    int, int
-        (width, height) of the page in pts.
-    """
-    try:
-        with open(CONFIGPATH, "r", encoding="utf-8") as cfg:
-            config = json.load(cfg)
-    except FileNotFoundError:
-        warnings.warn("Page size not set, using defaults (see 'set_page_dimension').")
-        return 630, 412
-    return (config["width"], config["height"])
-
-
-@export
-@deprecation.deprecated(
-    deprecated_in="0.3",
-    removed_in="0.4",
-    current_version=__version__,
-    details="Obsolete, use 'lpl.size.reset' instead.",
-)
-def reset_page_size():
-    if os.path.exists(CONFIGPATH):
-        os.remove(CONFIGPATH)
 
 
 class Config:
@@ -332,5 +259,5 @@ def subplots(
         nrows,
         ncols,
         figsize=_set_size(nrows, ncols, fraction=fraction, ratio=ratio),
-        **kwargs
+        **kwargs,
     )
