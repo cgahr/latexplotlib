@@ -1,0 +1,68 @@
+# Axes colors and styles
+axes.prop_cycle: cycler(color=['000000', 'E69F00', '56B4E9', '009E73', 'F0E442', '0072B2', 'D55E00', 'CC79A7'], linestyle=['-', '--', ':', '-.', '-', '--', ':', '-.'])
+axes.edgecolor: k
+
+# Figure params
+figure.constrained_layout.use: True
+figure.facecolor: white
+figure.figsize: 5.69, 3.52
+figure.dpi: 200
+
+# Set x axis
+xtick.direction: in
+xtick.major.size: 3
+xtick.major.width: 0.5
+xtick.minor.size: 1.5
+xtick.minor.width: 0.5
+xtick.minor.visible: False
+xtick.top: True
+xtick.color: k
+
+# Set y axis
+ytick.direction: in
+ytick.major.size: 3
+ytick.major.width: 0.5
+ytick.minor.size: 1.5
+ytick.minor.width: 0.5
+ytick.minor.visible: False
+ytick.right: True
+ytick.color: k
+
+# Set line widths
+axes.linewidth: 0.5
+grid.linewidth: 0.5
+lines.linewidth: 1.
+
+# Font
+font.family: serif
+
+# Fontsize
+font.size: 9
+axes.labelsize: 8
+axes.titlesize: 9
+legend.fontsize: 7
+legend.title_fontsize: 8
+xtick.labelsize: 7
+ytick.labelsize: 7
+
+# Grid
+axes.axisbelow : True
+grid.linestyle : --
+grid.color : 878787
+grid.alpha : 0.5
+
+# Legend
+legend.fancybox : True
+legend.framealpha : 1.0
+legend.frameon : True
+legend.numpoints : 1
+
+# Latex
+text.usetex: True
+text.latex.preamble: \usepackage{amsmath} \usepackage{amssymb}
+
+# Savefig params
+savefig.bbox: standard
+savefig.dpi: 300
+savefig.format: pdf
+savefig.pad_inches: 0.05
