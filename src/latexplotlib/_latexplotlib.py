@@ -300,13 +300,16 @@ def subplots(
     """
     if "figsize" in kwargs:
         kwargs.pop("figsize")
-        warnings.warn("keyword 'figsize' is ignored and its value discarded.")
+        warnings.warn(
+            "keyword 'figsize' is ignored and its value discarded.", stacklevel=2
+        )
 
     if ratio is not None:
         warnings.warn(
             "the keyword argument 'ratio' is deprecated and will removed in the "
             "future. Use 'aspect' instead.",
             DeprecationWarning,
+            stacklevel=2,
         )
 
     if fraction is not None:
@@ -314,6 +317,7 @@ def subplots(
             "the keyword argument 'fraction' is deprecated and will be removed in the "
             "future. Use 'scale' instead.",
             DeprecationWarning,
+            stacklevel=2,
         )
 
     if "nrows" in kwargs:
