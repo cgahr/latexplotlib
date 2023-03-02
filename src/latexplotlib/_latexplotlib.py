@@ -1,13 +1,18 @@
 import json
 import os
-import sys
 import warnings
 from contextlib import contextmanager
 from pathlib import Path
-from typing import Any, Dict, Literal, Optional, Sequence, Tuple, Union
+from typing import TYPE_CHECKING, Any, Dict, Optional, Sequence, Tuple, Union
 
 import matplotlib.pyplot as plt
 from appdirs import user_config_dir
+
+if TYPE_CHECKING:
+    from typing import Literal
+else:
+    Literal = Any
+
 
 GOLDEN_RATIO: float = (5**0.5 + 1) / 2
 NAME: str = "latexplotlib"
