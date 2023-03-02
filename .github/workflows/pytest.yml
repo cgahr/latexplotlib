@@ -25,8 +25,3 @@ jobs:
         pip install ".[tests]"
     - name: run pytest
       run: pytest
-    - name: Archive pytest coverage report
-      uses: actions/upload-artifact@v2
-      with:
-        name: code-coverage-report
-        path: htmlcov
