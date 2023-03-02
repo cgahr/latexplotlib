@@ -27,7 +27,7 @@ keywords = [
 license = {text = "MIT"}
 name = "latexplotlib"
 readme = "README.md"
-requires-python = ">=3.6"
+requires-python = ">=3.7.1"
 
 [project.optional-dependencies]
 tests = [

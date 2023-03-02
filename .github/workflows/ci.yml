@@ -12,10 +12,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
-    - name: Set up python 3.6
+    - name: Set up python 3.7.1
       uses: actions/setup-python@v2
       with:
-        python-version: 3.6
+        python-version: 3.7.1
     - name: Install dependencies
       run: |
         pip install --upgrade pip
