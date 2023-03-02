@@ -11,21 +11,11 @@ https://github.com/garrettj403/SciencePlots/blob/master/setup.py
 import atexit
 import glob
 import os
-import re
 import shutil
 
 import matplotlib
 from setuptools import setup
 from setuptools.command.install import install
-
-# read version
-with open("src/latexplotlib/_version.py", encoding="utf-8") as fh:
-    match = re.search(r'__version__ = "(\d\.\d\.\d)"', fh.read())
-
-if match:
-    version = match.group(1)
-else:
-    raise RuntimeError("Could not parse version number.")
 
 
 def install_styles():
@@ -50,10 +40,4 @@ class PostInstallMoveFile(install):
         atexit.register(install_styles)
 
 
-setup(
-    version=version,
-    cmdclass={
-        "install": PostInstallMoveFile,
-    },
-    package_data={"latexplotlib": ["py.typed"]},
-)
+setup(cmdclass={"install": PostInstallMoveFile})

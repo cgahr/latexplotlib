@@ -1,33 +1,139 @@
 [build-system]
-requires = ["setuptools", "matplotlib"]
 build-backend = "setuptools.build_meta"
+requires = ["setuptools", "matplotlib"]
+
+[project]
+authors = [
+    {name = "Constantin Gahr", email = "latexplotlib.gvxel@aleeas.com"},
+]
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+]
+dependencies = [
+    "appdirs",
+    "matplotlib",
+]
+description = "Perfect matplotlib figures for latex"
+dynamic = ["version"]
+keywords = [
+    "latex",
+    "matplotlib-figures",
+    "matplotlib-style-sheets",
+    "matplotlib-styles",
+    "python",
+]
+license = {text = "MIT"}
+name = "latexplotlib"
+readme = "README.md"
+requires-python = ">=3.6"
+
+[project.optional-dependencies]
+tests = [
+    "black",
+    "coverage",
+    "flake8",
+    "flake8-bandit",
+    "flake8-bugbear",
+    "flake8-comprehensions",
+    "isort",
+    "jupytext",
+    "mypy",
+    "pytest",
+    "pytest-console-scripts",
+    "pytest-cov",
+    "pytest-env",
+    "pytest-mock",
+]
+
+[project.urls]
+Homepage = "https://github.com/cgahr/latexplotlib"
+Issues = "https://github.com/cgahr/latexplotlib/issues"
+
+[tool.setuptools.dynamic]
+version = {attr = "latexplotlib._version.__version__"}
+
+[tool.setuptools.package-data]
+opinf =  ["py.typed"]
+
+[tool.setuptools.packages.find]
+where = ["src"]
 
 [tool.pytest.ini_options]
 addopts = "--cov=src --cov-report=html --cov-report=term"
 testpaths = [
     "tests",
 ]
-# filterwarnings = ignore::DeprecationWarning
+
+[tool.pylint.main]
+ignore = [
+    ".cache",
+    ".git",
+    ".ipynb_checkpoints",
+    "__pycache__",
+    "build",
+    "build",
+    "dist",
+    "examples",
+    "setup*",
+    "tests",
+]
+ignore-patterns = [".*\\.md$"]
+persistent = true
+suggestion-mode = true
+
+[tool.pylint.basic]
+argument-naming-style = "snake_case"
+attr-naming-style = "snake_case"
+class-attribute-naming-style = "any"
+class-const-naming-style = "UPPER_CASE"
+class-naming-style = "PascalCase"
+const-naming-style = "UPPER_CASE"
+function-naming-style = "snake_case"
+good-names = ["df", "ax", "y1", "y2"]
+good-names-rgxs = ["([A-Za-z]{1}|[a-z]+[0-9]*|[A-Z]{1}.*)$"]
+method-naming-style = "snake_case"
+module-naming-style = "snake_case"
+variable-naming-style = "snake_case"
+
+[tool.pylint.exceptions]
+# Exceptions that will emit a warning when caught.
+overgeneral-exceptions = ["BaseException", "Exception"]
+
+[tool.pylint.format]
+max-line-length = "88"
+
+[tool.pylint.logging]
+logging-format-style = "fstr"
+logging-modules = ["logging"]
+disable = [
+    "missing-class-docstring"
+]
+
+
+[tool.isort]
+profile = "black"
 
 [tool.mypy]
-exclude = ["build", "tests", "examples"]
-mypy_path = "src"
 check_untyped_defs = true
-disallow_any_generics = true
-ignore_missing_imports = true
+exclude = [
+    ".cache",
+    ".git",
+    ".ipynb_checkpoints",
+    "__pycache__",
+    "build",
+    "dist",
+    "examples",
+    "setup*",
+    "tests",
+]
+mypy_path = "src"
 no_implicit_optional = true
+no_implicit_reexport = true
 show_error_codes = true
 strict_equality = true
 warn_redundant_casts = true
 warn_return_any = true
 warn_unreachable = true
 warn_unused_configs = true
-no_implicit_reexport = true
-
-[tool.isort]
-profile = "black"
-multi_line_output = 3
-
-[tool.pycodestyle]
-max-line-length = 88
-ignore = "E203, W503, E402"

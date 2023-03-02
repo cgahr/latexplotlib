@@ -12,15 +12,14 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
-    - name: Set up python 3.9
+    - name: Set up python 3.6
       uses: actions/setup-python@v2
       with:
-        python-version: 3.9
+        python-version: 3.6
     - name: Install dependencies
       run: |
         pip install --upgrade pip
-        pip install -r requirements_test.txt
-        pip install .
+        pip install ".[tests]"
     - name: Black code formatter
       run: black src --check
     - name: Isort sort imports
