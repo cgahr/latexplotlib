@@ -300,15 +300,15 @@ def subplots(
 
     if ratio is not None:
         warnings.warn(
-            "the keyword argument 'ratio' is deprecated and will be ignored. Use "
-            "'aspect' instead.",
+            "the keyword argument 'ratio' is deprecated and will removed in the "
+            "future. Use 'aspect' instead.",
             DeprecationWarning,
         )
 
     if fraction is not None:
         warnings.warn(
-            "the keyword argument 'fraction' is deprecated and will be ignored. Use "
-            "'scale' instead.",
+            "the keyword argument 'fraction' is deprecated and will be removed in the "
+            "future. Use 'scale' instead.",
             DeprecationWarning,
         )
 
