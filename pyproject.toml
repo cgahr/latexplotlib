@@ -46,6 +46,7 @@ linters =  [
     "flake8-comprehensions",
     "isort",
     "mypy",
+    "types-appdirs",
 ]
 
 [project.urls]
