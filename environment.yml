@@ -4,25 +4,10 @@ channels:
   - defaults
 dependencies:
   - python>=3.6
-  - matplotlib
-  - isort
   - ipython
-  - mypy
   - pip
-  - pylint
-  - pytest
   - pip:
-    - black
-    - coverage
-    - flake8
-    - flake8-bandit
-    - flake8-bugbear
-    - flake8-comprehensions
     - pre-commit
-    - pycodestyle
-    - pytest-console-scripts
-    - pytest-cov
-    - pytest-env
-    - pytest-mock
     - build
     - twine
+    - "--editable=.[tests,linters]"
