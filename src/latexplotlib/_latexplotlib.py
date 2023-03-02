@@ -4,7 +4,7 @@ import sys
 import warnings
 from contextlib import contextmanager
 from pathlib import Path
-from typing import Any, Dict, Optional, Tuple, Union
+from typing import Any, Dict, Optional, Tuple, Union, Literal, Sequence
 
 import matplotlib.pyplot as plt
 from appdirs import user_config_dir
@@ -18,15 +18,16 @@ CONFIGPATH: Path = CONFIGDIR.joinpath(CONFIGFILE)
 DEFAULT_CONFIG: Dict[str, int] = {"width": 630, "height": 412}
 
 
-def export(sth: Any, name: Optional[str] = None):  # type: ignore
-    mod = sys.modules[sth.__module__]
-    name = name if name is not None else sth.__name__
+Aspect = Union[float, Literal["auto", "equal"]]
 
-    if hasattr(mod, "__all__"):
-        mod.__all__.append(name)  # type: ignore
-    else:
-        mod.__all__ = [name]  # type: ignore
-    return sth
+
+__all__ = [
+    "convert_inches_to_pt",
+    "convert_pt_to_inches",
+    "figsize",
+    "size",
+    "subplots",
+]
 
 
 def _round(val: float) -> float:
@@ -71,7 +72,6 @@ class Config:
 
 
 config = Config(CONFIGPATH)
-export(config, "config")
 
 
 class Size:
@@ -134,11 +134,9 @@ class Size:
 
 
 size = Size()
-export(size, "size")
 
 
-@export
-def convert_pt_to_in(pts: int) -> float:
+def convert_pt_to_inches(pts: Union[int, float]) -> float:
     """Converts a length in pts to a length in inches.
 
     Parameters
@@ -158,8 +156,7 @@ def convert_pt_to_in(pts: int) -> float:
     return 12.0 * 249.0 / 250.0 / 864.0 * pts
 
 
-@export
-def convert_in_to_to(inches: float) -> float:
+def convert_inches_to_pt(inches: float) -> float:
     """Converts a length in inch to a length in pt.
 
     Parameters
@@ -179,39 +176,76 @@ def convert_in_to_to(inches: float) -> float:
     return inches * 864.0 * 250.0 / 249.0 / 12.0
 
 
-def _set_size(
-    nrows, ncols, fraction: float = 1.0, ratio: Union[float, str] = GOLDEN_RATIO
+def figsize(
+    nrows: int = 1,
+    ncols: int = 1,
+    *,
+    scale: float = 1.0,
+    aspect: Aspect = GOLDEN_RATIO,
+    gridspec_kw: Optional[Dict[str, Any]] = None,
 ):
-    EXCEPTION_STR = "fraction must be positive or 'any' or 'max'."
-    if fraction < 0 or (isinstance(ratio, str) and ratio not in ["any", "max"]):
-        raise ValueError(EXCEPTION_STR)
+    """Computes the optimal figsize.
+
+    This function computes width and height (in inches) such that a figure using this
+    figsize fits into a 'lpl.size' box (in pt) in a latex document.
+
+    Parameters
+    ----------
+    nrows, ncols : int, default: 1
+        Number of rows/columns of the subplot grid.
+    scale : float, default: 1.0
+        The scale of horizontal or vertical space to be used for the figure. For
+        values larger then 1.0, the figure is to large to fit on the latex page without
+        scaling it.
+    aspect : Union[float, Literal["auto", "equal"]], default: 1.618033
+        The aspect of figure width to figure height for each individual axis element.
+        Defaults to the golden ratio.
+    gridspec_kw : dict, optional
+        Dict with keywords (normally) passed to the GridSpec constructor used to create
+        the grid the subplots are placed on. Ignores everything but 'width_ratios' and
+        'height_ratios'.
+
+    Returns
+    -------
+    width, height : float
+        width and height of the figure in inches.
+    """
+    if scale < 0:
+        raise ValueError("'scale' must be positive")
+    if isinstance(aspect, str) and aspect not in ["equal", "auto"]:
+        raise ValueError("'aspect' a float, 'equal' or 'auto'.")
 
     max_width_pt, max_height_pt = size.get()
 
-    fraction = max(fraction, 1)
+    scale = max(scale, 1)
 
-    if isinstance(ratio, str):
-        width_pt, height_pt = fraction * max_width_pt, fraction * max_height_pt
+    if aspect == "equal":
+        aspect = 1.0
+
+    if isinstance(aspect, str):
+        width_pt, height_pt = scale * max_width_pt, scale * max_height_pt
     else:
-        width_pt = max_width_pt * fraction
+        width_pt = max_width_pt * scale
 
-        height_pt = width_pt / ratio * (nrows / ncols)
+        height_pt = width_pt / aspect * (nrows / ncols)
 
         if height_pt > max_height_pt:
             width_pt = width_pt * max_height_pt / height_pt
             height_pt = max_height_pt
 
-    return _round(convert_pt_to_in(width_pt)), _round(convert_pt_to_in(height_pt))
+    return (
+        _round(convert_pt_to_inches(width_pt)),
+        _round(convert_pt_to_inches(height_pt)),
+    )
 
 
-@export
-def figsize(fraction: float = 1.0, ratio: float = GOLDEN_RATIO):
-    return _set_size(1, 1, fraction=fraction, ratio=ratio)
-
-
-@export
 def subplots(
-    *args, fraction: float = 1.0, ratio: Union[float, str] = GOLDEN_RATIO, **kwargs
+    *args,
+    scale: float = 1.0,
+    aspect: Aspect = GOLDEN_RATIO,
+    ratio: Any = None,
+    fraction: Any = None,
+    **kwargs,
 ) -> Tuple[Any, Any]:
     """A wrapper for matplotlib's 'plt.subplots' method
 
@@ -221,13 +255,13 @@ def subplots(
     ----------
     *args
         see help(plt.subplots)
-    fraction : float, optional
-        The fraction of of horizontal or vertical space to be used for the figure. For
+    scale : float, optional
+        The scale of of horizontal or vertical space to be used for the figure. For
         values larger then 1.0, the figure is to large to fit on the latex page without
         scaling it.
-    ratio : float, optional
-        The ratio of figure width to figure height for each individual axis element.
-        Defaults to the golden ratio.
+    aspect : float, optional
+        The aspect of figure width to figure height for each individual axis element.
+        Defaults to the golden aspect.
     **kwargs
         see help(plt.subplots)
 
@@ -245,6 +279,20 @@ def subplots(
         kwargs.pop("figsize")
         warnings.warn("keyword 'figsize' is ignored and its value discarded.")
 
+    if ratio is not None:
+        warnings.warn(
+            "the keyword argument 'ratio' is deprecated and will be ignored. Use "
+            "'aspect' instead.",
+            DeprecationWarning,
+        )
+
+    if fraction is not None:
+        warnings.warn(
+            "the keyword argument 'fraction' is deprecated and will be ignored. Use "
+            "'scale' instead.",
+            DeprecationWarning,
+        )
+
     if "nrows" in kwargs:
         nrows = kwargs.pop("nrows")
         ncols = kwargs.pop("ncols")
@@ -255,9 +303,10 @@ def subplots(
         nrows = args[0]
         ncols = args[1]
 
-    return plt.subplots(  # type: ignore
-        nrows,
-        ncols,
-        figsize=_set_size(nrows, ncols, fraction=fraction, ratio=ratio),
-        **kwargs,
+    gridspec_kw = kwargs.get("gridspec_kw")
+
+    _figsize = figsize(
+        nrows, ncols, scale=scale, aspect=aspect, gridspec_kw=gridspec_kw
     )
+
+    return plt.subplots(nrows, ncols, figsize=_figsize, **kwargs)  # type: ignore

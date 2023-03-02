@@ -140,77 +140,85 @@ class Test_Size:
         repr(size)
 
 
-def test_convert_pt_to_in():
+def test_convert_pt_to_inches():
     val = 250 * 864
     ret = 12 * 249
-    assert ret == lpl.convert_pt_to_in(val)
+    assert ret == lpl.convert_pt_to_inches(val)
 
 
-class TestSetSize:
+class TestFigsize:
     def setup_function(self, monkeypatch, mocker):
         size = mocker.MagicMock()
         size.get = mocker.MagicMock(return_value=(WIDTH, HEIGHT))
         monkeypatch.setattr(lpl, "size", size)
 
-    @pytest.mark.parametrize("nrows", [1, 2, 3])
-    @pytest.mark.parametrize("ncols", [1, 2, 3])
-    @pytest.mark.parametrize("fraction", [0.5, 1.0, 2.0])
-    def test_nrows_ncols(self, nrows, ncols, fraction):
-        width = ncols * lpl._round(lpl.convert_pt_to_in(WIDTH))
-        height = nrows * lpl._round(lpl.convert_pt_to_in(WIDTH / GOLDEN_RATIO))
+    @pytest.fixture(params=(1, 2, 3))
+    def nrows(self, request):
+        return request.param
 
-        res_width, res_height = lpl._set_size(nrows, ncols, fraction=fraction)
-        assert res_width <= width * max(fraction, 1)
-        assert res_height <= height * max(fraction, 1)
+    @pytest.fixture(params=(1, 2, 3))
+    def ncols(self, request):
+        return request.param
 
-    @pytest.mark.parametrize("nrows", [1, 2])
-    @pytest.mark.parametrize("ncols", [1, 2])
-    @pytest.mark.parametrize("fraction", [0.5, 1.0, 2.0])
-    @pytest.mark.parametrize("ratio", [GOLDEN_RATIO, 1, 2])
-    def test_nrows_ncols_with_ratio(self, nrows, ncols, fraction, ratio):
-        width = ncols * lpl._round(lpl.convert_pt_to_in(WIDTH))
-        height = nrows * lpl._round(lpl.convert_pt_to_in(WIDTH / ratio))
+    @pytest.fixture(params=(0.5, 1.0, 2.0))
+    def scale(self, request):
+        return request.param
 
-        res_width, res_height = lpl._set_size(
-            nrows, ncols, fraction=fraction, ratio=ratio
-        )
-        assert res_width <= width * max(fraction, 1)
-        assert res_height <= height * max(fraction, 1)
+    def test_nrows_ncols(self, nrows, ncols, scale):
+        width = ncols * lpl._round(lpl.convert_pt_to_inches(WIDTH))
+        height = nrows * lpl._round(lpl.convert_pt_to_inches(WIDTH / GOLDEN_RATIO))
+
+        res_width, res_height = lpl.figsize(nrows, ncols, scale=scale)
+        assert res_width <= width * max(scale, 1)
+        assert res_height <= height * max(scale, 1)
+
+    @pytest.mark.parametrize("aspect", [GOLDEN_RATIO, 1, 2])
+    def test_nrows_ncols_with_ratio(self, nrows, ncols, scale, aspect):
+        width = ncols * lpl._round(lpl.convert_pt_to_inches(WIDTH))
+        height = nrows * lpl._round(lpl.convert_pt_to_inches(WIDTH / aspect))
+
+        res_width, res_height = lpl.figsize(nrows, ncols, scale=scale, aspect=aspect)
+        assert res_width <= width * max(scale, 1)
+        assert res_height <= height * max(scale, 1)
 
     def test_negative_fraction(self):
         with pytest.raises(ValueError):
-            lpl._set_size(1, 1, fraction=-1)
+            lpl.figsize(1, 1, scale=-1)
 
-    @pytest.mark.parametrize("nrows", [1, 2])
-    @pytest.mark.parametrize("ncols", [1, 2])
-    @pytest.mark.parametrize("fraction", [0.5, 1.0, 2.0])
-    @pytest.mark.parametrize("ratio", ["any", "max"])
-    def test_str_ratio(self, nrows, ncols, fraction, ratio):
-        width = ncols * lpl._round(lpl.convert_pt_to_in(WIDTH))
-        height = nrows * lpl._round(lpl.convert_pt_to_in(WIDTH))
+    @pytest.mark.parametrize("aspect", ["equal", "auto"])
+    def test_str_ratio(self, nrows, ncols, scale, aspect):
+        width = ncols * lpl._round(lpl.convert_pt_to_inches(WIDTH))
+        height = nrows * lpl._round(lpl.convert_pt_to_inches(WIDTH))
 
-        res_width, res_height = lpl._set_size(
-            nrows, ncols, fraction=fraction, ratio=ratio
-        )
-        assert res_width <= width * max(fraction, 1)
-        assert res_height <= height * max(fraction, 1)
+        res_width, res_height = lpl.figsize(nrows, ncols, scale=scale, aspect=aspect)
+        assert res_width <= width * max(scale, 1)
+        assert res_height <= height * max(scale, 1)
 
-    @pytest.mark.parametrize("ratio", ["test", "asd", "min"])
-    def test_invalid_ratio(self, ratio):
+    @pytest.mark.parametrize("aspect", ["test", "asd", "min"])
+    def test_invalid_ratio(self, aspect):
         with pytest.raises(ValueError):
-            lpl._set_size(1, 1, ratio=ratio)
+            lpl.figsize(1, 1, aspect=aspect)
+
+    def test_invalid_scale(self):
+        with pytest.raises(ValueError):
+            lpl.figsize(1, 1, scale=-1)
 
 
-@pytest.mark.parametrize("fraction", [0.1, 0.5, 0.9, 1.0])
-def test_figsize(fraction):
-    assert lpl._set_size(1, 1, fraction=fraction) == lpl.figsize(fraction=fraction)
+class TestSubplots:
+    def test_args(self):
+        lpl.subplots(1, 1)
+        lpl.subplots(1, ncols=1)
+        lpl.subplots(nrows=1, ncols=1)
+        lpl.subplots(2, 3)
 
+    def test_deprecates_ratio(self):
+        with pytest.warns(DeprecationWarning):
+            lpl.subplots(1, 1, ratio=1)
 
-def test_subplots():
-    lpl.subplots(1, 1)
-    lpl.subplots(1, ncols=1)
-    lpl.subplots(nrows=1, ncols=1)
-    lpl.subplots(2, 3)
+    def test_deprecates_fraction(self):
+        with pytest.warns(DeprecationWarning):
+            lpl.subplots(1, 1, fraction=1)
 
-    with pytest.warns(UserWarning):
-        lpl.subplots(1, 1, figsize=(3, 4))
+    def test_warns_if_figsize_used(self):
+        with pytest.warns(UserWarning):
+            lpl.subplots(1, 1, figsize=(3, 4))
