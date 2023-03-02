@@ -31,20 +31,21 @@ requires-python = ">=3.7.1"
 
 [project.optional-dependencies]
 tests = [
-    "black",
     "coverage",
-    "flake8",
-    "flake8-bandit",
-    "flake8-bugbear",
-    "flake8-comprehensions",
-    "isort",
-    "jupytext",
-    "mypy",
     "pytest",
     "pytest-console-scripts",
     "pytest-cov",
     "pytest-env",
     "pytest-mock",
+]
+linters =  [
+    "black",
+    "flake8",
+    "flake8-bandit",
+    "flake8-bugbear",
+    "flake8-comprehensions",
+    "isort",
+    "mypy",
 ]
 
 [project.urls]
