@@ -10,8 +10,10 @@ from appdirs import user_config_dir
 
 if TYPE_CHECKING:
     from typing import Literal
+
+    Aspect = Union[float, Literal["auto", "equal"]]
 else:
-    Literal = Any
+    Aspect = Union[float, str]
 
 
 GOLDEN_RATIO: float = (5**0.5 + 1) / 2
@@ -21,9 +23,6 @@ CONFIGFILE: str = "config.ini"
 CONFIGDIR: Path = Path(user_config_dir(NAME))
 CONFIGPATH: Path = CONFIGDIR.joinpath(CONFIGFILE)
 DEFAULT_CONFIG: Dict[str, int] = {"width": 630, "height": 412}
-
-
-Aspect = Union[float, Literal["auto", "equal"]]
 
 
 __all__ = [
