@@ -4,7 +4,7 @@ import sys
 import warnings
 from contextlib import contextmanager
 from pathlib import Path
-from typing import Any, Dict, Optional, Tuple, Union, Literal, Sequence
+from typing import Any, Dict, Literal, Optional, Sequence, Tuple, Union
 
 import matplotlib.pyplot as plt
 from appdirs import user_config_dir
@@ -215,6 +215,26 @@ def figsize(
     if isinstance(aspect, str) and aspect not in ["equal", "auto"]:
         raise ValueError("'aspect' a float, 'equal' or 'auto'.")
 
+    width_ratios: Sequence[float] = ncols * [1.0]
+    height_ratios: Sequence[float] = nrows * [1.0]
+
+    if gridspec_kw is not None:
+        if "width_ratios" in gridspec_kw:
+            if len(gridspec_kw["width_ratios"]) != ncols:
+                raise ValueError(
+                    "Expected the given number of width ratios to match the number of "
+                    "columns of the grid"
+                )
+            width_ratios = gridspec_kw["width_ratios"]
+
+        if "height_ratios" in gridspec_kw:
+            if len(gridspec_kw["height_ratios"]) != nrows:
+                raise ValueError(
+                    "Expected the given number of height ratios to match the number of "
+                    "rows of the grid"
+                )
+            height_ratios = gridspec_kw["height_ratios"]
+
     max_width_pt, max_height_pt = size.get()
 
     scale = max(scale, 1)
@@ -226,8 +246,7 @@ def figsize(
         width_pt, height_pt = scale * max_width_pt, scale * max_height_pt
     else:
         width_pt = max_width_pt * scale
-
-        height_pt = width_pt / aspect * (nrows / ncols)
+        height_pt = width_pt / aspect * (sum(height_ratios) / sum(width_ratios))
 
         if height_pt > max_height_pt:
             width_pt = width_pt * max_height_pt / height_pt

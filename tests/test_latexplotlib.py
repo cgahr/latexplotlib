@@ -1,3 +1,9 @@
+# pylint: disable = import-error, missing-class-docstring, missing-function-docstring
+# pylint: disable = missing-module-docstring, no-self-use, protected-access
+# pylint: disable = redefined-outer-name, too-few-public-methods, too-many-arguments
+# pylint: disable = unused-argument
+
+
 import json
 import os
 
@@ -6,8 +12,8 @@ import pytest
 from latexplotlib import _latexplotlib as lpl
 
 GOLDEN_RATIO = (5**0.5 + 1) / 2
-HEIGHT = 96978
-WIDTH = 3453547
+HEIGHT = 30000
+WIDTH = 40000
 
 CONFIGFILE = "config.ini"
 
@@ -194,6 +200,20 @@ class TestFigsize:
         assert res_width <= width * max(scale, 1)
         assert res_height <= height * max(scale, 1)
 
+    def test_gridspec_kw(self, nrows, ncols):
+        height_ratios = [0.5, 1.0, 0.1][:nrows]
+        width_ratios = [0.7, 1.0, 0.3][:ncols]
+        gridspec_kw = {"height_ratios": height_ratios, "width_ratios": width_ratios}
+
+        res_width, res_height = lpl.figsize(
+            nrows, ncols, scale=1, aspect=1, gridspec_kw=gridspec_kw
+        )
+
+        ratio_theory = sum(height_ratios) / sum(width_ratios)
+        ratio_test = res_height / res_width
+
+        assert abs(1 - ratio_theory / ratio_test) <= 0.07
+
     @pytest.mark.parametrize("aspect", ["test", "asd", "min"])
     def test_invalid_ratio(self, aspect):
         with pytest.raises(ValueError):
@@ -222,3 +242,37 @@ class TestSubplots:
     def test_warns_if_figsize_used(self):
         with pytest.warns(UserWarning):
             lpl.subplots(1, 1, figsize=(3, 4))
+
+    def test_plot(self, show):
+        fig, axes = lpl.subplots(
+            2,
+            3,
+            aspect="equal",
+            gridspec_kw={
+                "height_ratios": [0.25, 1.0],
+                "width_ratios": [0.25, 1.0, 0.25],
+            },
+        )
+
+        axes[0, 0].axis("off")
+        axes[0, 1].imshow([[1.5, 2.5, 3.5, 4.5]], vmin=0, vmax=6)
+        axes[0, 2].axis("off")
+
+        axes[1, 0].imshow([[1.5], [2.5], [3.5], [4.5]], vmin=0, vmax=6)
+        axes[1, 1].imshow(
+            [[0, 1, 2, 3], [1, 2, 3, 4], [2, 3, 4, 5], [3, 4, 5, 6]], vmin=0, vmax=6
+        )
+        axes[1, 2].imshow([[1.5], [2.5], [3.5], [4.5]], vmin=0, vmax=6)
+
+        fig.suptitle("test")
+
+    def test_plot2(self, show):
+        fig, axes = lpl.subplots(
+            1,
+            2,
+            aspect="equal",
+            gridspec_kw={
+                "height_ratios": [0.1],
+                "width_ratios": [0.2, 1.0],
+            },
+        )
