@@ -1,4 +1,4 @@
-name: CI Lint
+name: CI
 
 on:
   push:
@@ -8,7 +8,8 @@ on:
     branches:
       - main
 jobs:
-  build:
+  lint:
+    name: lint codebase
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v3
@@ -28,3 +29,21 @@ jobs:
       run: flake8 src
     - name: Mypy code formatter
       run: mypy src
+  test:
+    name: pytest
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ["3.7", "3.8", "3.9", "3.10"]
+    steps:
+    - uses: actions/checkout@v3
+    - name: Set up Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v4
+      with:
+        python-version: ${{ matrix.python-version }}
+    - name: Install dependencies
+      run: |
+        pip install --upgrade pip
+        pip install ".[tests]"
+    - name: run pytest
+      run: pytest
