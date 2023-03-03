@@ -7,6 +7,7 @@
 import json
 import os
 
+import matplotlib
 import pytest
 
 from latexplotlib import _latexplotlib as lpl
@@ -247,6 +248,10 @@ class TestSubplots:
         with pytest.warns(UserWarning):
             lpl.subplots(1, 1, figsize=(3, 4))
 
+    @pytest.mark.skipif(
+        matplotlib.__version_info__ >= (3, 6),
+        reason="requires matplotlib 3.6.0 or higher",
+    )
     def test_width_height_ratios(self):
         lpl.subplots(
             2,
