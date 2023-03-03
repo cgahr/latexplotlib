@@ -186,7 +186,8 @@ def figsize(
     *,
     scale: float = 1.0,
     aspect: Aspect = GOLDEN_RATIO,
-    gridspec_kw: Optional[Dict[str, Any]] = None,
+    height_ratios: Optional[Sequence[float]] = None,
+    width_ratios: Optional[Sequence[float]] = None,
 ):
     """Computes the optimal figsize.
 
@@ -219,25 +220,11 @@ def figsize(
     if isinstance(aspect, str) and aspect not in ["equal", "auto"]:
         raise ValueError("'aspect' a float, 'equal' or 'auto'.")
 
-    width_ratios: Sequence[float] = ncols * [1.0]
-    height_ratios: Sequence[float] = nrows * [1.0]
+    if width_ratios is None:
+        width_ratios = ncols * [1.0]
 
-    if gridspec_kw is not None:
-        if "width_ratios" in gridspec_kw:
-            if len(gridspec_kw["width_ratios"]) != ncols:
-                raise ValueError(
-                    "Expected the given number of width ratios to match the number of "
-                    "columns of the grid"
-                )
-            width_ratios = gridspec_kw["width_ratios"]
-
-        if "height_ratios" in gridspec_kw:
-            if len(gridspec_kw["height_ratios"]) != nrows:
-                raise ValueError(
-                    "Expected the given number of height ratios to match the number of "
-                    "rows of the grid"
-                )
-            height_ratios = gridspec_kw["height_ratios"]
+    if height_ratios is None:
+        height_ratios = nrows * [1.0]
 
     max_width_pt, max_height_pt = size.get()
 
@@ -330,10 +317,17 @@ def subplots(
         nrows = args[0]
         ncols = args[1]
 
-    gridspec_kw = kwargs.get("gridspec_kw")
+    gridspec_kw = kwargs.get("gridspec_kw") or {}
+    width_ratios = kwargs.get("width_ratios") or gridspec_kw.get("width_ratios")
+    height_ratios = kwargs.get("height_ratios") or gridspec_kw.get("height_ratios")
 
     _figsize = figsize(
-        nrows, ncols, scale=scale, aspect=aspect, gridspec_kw=gridspec_kw
+        nrows,
+        ncols,
+        scale=scale,
+        aspect=aspect,
+        width_ratios=width_ratios,
+        height_ratios=height_ratios,
     )
 
     return plt.subplots(nrows, ncols, figsize=_figsize, **kwargs)  # type: ignore

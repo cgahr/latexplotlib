@@ -200,13 +200,17 @@ class TestFigsize:
         assert res_width <= width * max(scale, 1)
         assert res_height <= height * max(scale, 1)
 
-    def test_gridspec_kw(self, nrows, ncols):
+    def test_width_height_ratios(self, nrows, ncols):
         height_ratios = [0.5, 1.0, 0.1][:nrows]
         width_ratios = [0.7, 1.0, 0.3][:ncols]
-        gridspec_kw = {"height_ratios": height_ratios, "width_ratios": width_ratios}
 
         res_width, res_height = lpl.figsize(
-            nrows, ncols, scale=1, aspect=1, gridspec_kw=gridspec_kw
+            nrows,
+            ncols,
+            scale=1,
+            aspect=1,
+            height_ratios=height_ratios,
+            width_ratios=width_ratios,
         )
 
         ratio_theory = sum(height_ratios) / sum(width_ratios)
@@ -242,6 +246,15 @@ class TestSubplots:
     def test_warns_if_figsize_used(self):
         with pytest.warns(UserWarning):
             lpl.subplots(1, 1, figsize=(3, 4))
+
+    def test_width_height_ratios(self):
+        lpl.subplots(
+            2,
+            3,
+            aspect="equal",
+            height_ratios=[0.25, 1.0],
+            width_ratios=[0.25, 1.0, 0.25],
+        )
 
     def test_plot(self, show):
         fig, axes = lpl.subplots(
