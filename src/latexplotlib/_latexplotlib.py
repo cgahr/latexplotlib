@@ -184,7 +184,7 @@ def figsize(
     aspect: Aspect = GOLDEN_RATIO,
     height_ratios: Optional[Sequence[float]] = None,
     width_ratios: Optional[Sequence[float]] = None,
-) -> tuple[float, float]:
+) -> Tuple[float, float]:
     """Computes the optimal figsize.
 
     This function computes width and height (in inches) such that a figure using this
