@@ -1,9 +1,8 @@
 import json
-import os
 import warnings
 from contextlib import contextmanager
 from pathlib import Path
-from typing import TYPE_CHECKING, Any, Dict, Optional, Sequence, Tuple, Union
+from typing import TYPE_CHECKING, Any, Dict, Iterator, Optional, Sequence, Tuple, Union
 
 import matplotlib.pyplot as plt
 from appdirs import user_config_dir
@@ -39,38 +38,35 @@ def _round(val: float) -> float:
 
 
 class Config:
-    @classmethod
-    def _ensure_path_exists(cls, path: Path):
+    def __init__(self, path: Path) -> None:
         if not path.parent.exists():
             path.parent.mkdir()
 
-    def __init__(self, path: Path):
-        self._ensure_path_exists(path)
         self.path = path
 
     def _config(self) -> Dict[str, Any]:
-        if not os.path.exists(self.path):
+        if not self.path.exists():
             self.reset()
 
-        with open(self.path, "r", encoding="utf-8") as fh:
+        with self.path.open(encoding="utf-8") as fh:
             cfg: Dict[str, Any] = json.load(fh)
             return cfg
 
-    def _write(self, cfg: Dict[str, Any]):
-        with open(self.path, "w", encoding="utf-8") as fh:
+    def _write(self, cfg: Dict[str, Any]) -> None:
+        with self.path.open("w", encoding="utf-8") as fh:
             json.dump(cfg, fh, indent=4)
 
     def __getitem__(self, name: str) -> Any:
         return self._config()[name]
 
-    def __setitem__(self, name: str, value: int):
+    def __setitem__(self, name: str, value: Any) -> None:
         cfg = self._config()
         cfg[name] = value
         self._write(cfg)
 
-    def reset(self):
-        if os.path.exists(self.path):
-            os.remove(self.path)
+    def reset(self) -> None:
+        if self.path.exists():
+            self.path.unlink()
 
         self._write(DEFAULT_CONFIG)
 
@@ -82,7 +78,7 @@ class Size:
     _width: int
     _height: int
 
-    def __init__(self):
+    def __init__(self) -> None:
         self._width, self._height = config["width"], config["height"]
 
     def get(self) -> Tuple[int, int]:
@@ -95,7 +91,7 @@ class Size:
         """
         return self._width, self._height
 
-    def set(self, width: int, height: int):
+    def set(self, width: int, height: int) -> None:
         """Sets the size of the latex page in pts.
 
         You can find the size of the latex page with the following commands:
@@ -114,7 +110,7 @@ class Size:
         self._width, self._height = width, height
 
     @contextmanager
-    def context(self, width: int, height: int):
+    def context(self, width: int, height: int) -> Iterator[None]:
         """This context manager temporarily sets the size of the figure in pts.
 
         Parameters
@@ -130,10 +126,10 @@ class Size:
 
         self._width, self._height = _width, _height
 
-    def __str__(self):
+    def __str__(self) -> str:
         return str((self._width, self._height))
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return repr((self._width, self._height))
 
 
@@ -188,7 +184,7 @@ def figsize(
     aspect: Aspect = GOLDEN_RATIO,
     height_ratios: Optional[Sequence[float]] = None,
     width_ratios: Optional[Sequence[float]] = None,
-):
+) -> tuple[float, float]:
     """Computes the optimal figsize.
 
     This function computes width and height (in inches) such that a figure using this

@@ -45,16 +45,12 @@ class Test_Config:
         monkeypatch.setattr(lpl, "DEFAULT_CONFIG", default)
         return lpl.Config(tmp_path.joinpath("directory", "tmp.ini"))
 
-    def test__ensure_path_exists(self, tmp_path):
-        lpl.Config._ensure_path_exists(tmp_path)
-
-        assert tmp_path.exists()
-
     def test___init__(self, tmp_path):
         path = tmp_path.joinpath("tmp.ini")
         config = lpl.Config(path)
 
         assert config.path == path
+        assert config.path.parent.exists()
 
     def test_write(self, config, default):
         config._write(default)
