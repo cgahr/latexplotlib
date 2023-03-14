@@ -224,8 +224,6 @@ def figsize(
 
     max_width_pt, max_height_pt = size.get()
 
-    scale = max(scale, 1)
-
     if aspect == "equal":
         aspect = 1.0
 
