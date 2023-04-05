@@ -5,6 +5,37 @@
 Perfect matplotlib figures for latex.
 
 
+## Quickstart
+
+1. install `latexplotlib`:
+```python
+pip install latexplotlib
+```
+2. import latexplotlib and use latexplotlib style
+```python
+import latexplotlib as lpl
+
+plt.style.use('latex10pt')
+# lpl.style.use('latex10pt-minimal')
+```
+
+3. replace all `plt.subplots` with `lpl.subplots`:
+```python
+#  fig, axes = plt.subplots(2, 3)
+fig, axes = lpl.subplots(2, 3)
+```
+
+Optional:
+
+4. get size of latex document
+```latex
+(\the\textwidth, \the\textheight)  % (412.123pt, 346.564pt)
+```
+5. set `lpl.size` to size of latex document
+```python
+lpl.size.set(412.123, 346.564)
+```
+
 ## Usage
 
 This package has two basic functionalities. On the one hand, it sets sensible defaults
@@ -16,34 +47,49 @@ your document.
 
 ### latexplotlib styles
 
-There are 6 different styles for matplotlib.
-- `latex10pt`
-- `latex11pt`
-- `latex12pt`
+There are 6 different styles for matplotlib:
+
 - `latex10pt-minimal`
 - `latex11pt-minimal`
 - `latex12pt-minimal`
+- `latex10pt`
+- `latex11pt`
+- `latex12pt`
 
-The `*minimal` versions change the font and the font sizes to ensure that the figures fonts match the latex font perfectly. This style is fully compatible with other styles.
-
-The non-minimal versions set additional defaults to create perfect figures, that are accessible for color-blind people while still looking nice.
-
-Both styles change the defaults of the `plt.savefig` command so that all saved figures look good. These new defaults are
+The `*minimal` versions change the font and the font sizes to ensure that the figures fonts match the latex font. This style is fully compatible with other styles:
 
 ```python
-plt.savefig(
-    ...,
-    bbox_inches=None,
-    dpi=300,
-    format="pdf",
-    orientation="portrait",
-    pad_inches=0.05
-)
+import matplotlib.pyplot as plt
+import numpy as np
+
+import latexplotlib as lpl
+
+plt.style.use("latex10pt-minimal")
+# lpl.size.set(200, 400)
+with lpl.size.context(200, 400):
+    fig, ax = lpl.subplots(1, 1)
+
+x = np.linspace(1, 5, 100)
+
+for t in range(4):
+    label = f"$x^{t}$"
+    ax.plot(x, x ** t, label=label)
+
+ax.set_yscale("log")
+ax.set_title("Perfect matplotlib figures for \\LaTeX")
+ax.grid()
+
+fig.legend()
+plt.savefig("example_poly_minimal")
+plt.savefig("example_poly_minimal.png")
 ```
 
-### Example
+<p align="center">
+<img src="https://github.com/ConstantinGahr/latexplotlib/blob/main/examples/example_poly_minimal.png?raw=true" width="500">
+</p>
 
-Style `latex10pt`:
+
+The non-minimal versions set additional defaults to create figures that are accessible for color-blind people:
 
 ```python
 import matplotlib.pyplot as plt
@@ -75,39 +121,21 @@ fig.savefig("example_poly.png")
 <img src="https://github.com/ConstantinGahr/latexplotlib/blob/main/examples/example_poly.png?raw=true" width="500">
 </p>
 
-Style `latex10ptminimal`:
+Both styles change the defaults of the `plt.savefig` command. The new defaults are
+
 ```python
-import matplotlib.pyplot as plt
-import numpy as np
-
-import latexplotlib as lpl
-
-plt.style.use("latex10pt-minimal")
-# lpl.size.set(200, 400)
-with lpl.size.context(200, 400):
-    fig, ax = lpl.subplots(1, 1)
-
-x = np.linspace(1, 5, 100)
-
-for t in range(4):
-    label = f"$x^{t}$"
-    ax.plot(x, x ** t, label=label)
-
-ax.set_yscale("log")
-ax.set_title("Perfect matplotlib figures for \\LaTeX")
-ax.grid()
-
-fig.legend()
-plt.savefig("example_poly_minimal")
-plt.savefig("example_poly_minimal.png")
+plt.savefig(
+    ...,
+    bbox_inches=None,
+    dpi=300,
+    format="pdf",
+    orientation="portrait",
+    pad_inches=0.05
+)
 ```
 
-<p align="center">
-<img src="https://github.com/ConstantinGahr/latexplotlib/blob/main/examples/example_poly_minimal.png?raw=true" width="500">
-</p>
-
 ### Get latex dimensions
-You can find the dimensions of your document using the following command:
+You can find the width and height of your document using the following command:
 
 ```latex
 \the\textwidth
@@ -136,17 +164,18 @@ import latexplotlib as lpl
 
 
 # A figure filling 75% of the latex page
-_ = plt.figure(figsize=lpl.figsize(fraction=0.75))
+_ = lpl.subplots(1, 1)
 
 # A subplot filling 80% of the latex page
-fig, axes = lpl.subplots(3, 2, fraction=0.8)
+fig, axes = lpl.subplots(3, 2, scale=0.8)
 
 # A subplot for 3 square plots next to each other
-fig, axes = lpl.subplots(1, 3, fraction=0.8, ratio=1)
+fig, axes = lpl.subplots(1, 3, scale=0.8, aspect='equal')
 ```
 
-### `ratio` keyword
-The `ratio` keyword control the ratio of height to width. The default is the Golden ratio. `ratio` can also be `max` or `any`. In this case, the figure fills the available space.
+### `aspect` keyword
+The `aspect` keyword controls the ratio of height to width. The default is the Golden ratio. `aspect` can also be `equal` (i.e. `aspect=1` )or `auto`. In the latter case, the figure fills the available space.
+
 ```python
 import matplotlib.pyplot as plt
 
@@ -156,28 +185,31 @@ import latexplotlib as lpl
 fig, axes = lpl.subplots(3, 2)
 
 # A 3 by 2 figure where each subplot having a height to width ratio of 1:1
-fig, axes = lpl.subplots(3, 2, ratio=1.0)
+fig, axes = lpl.subplots(3, 2, aspect=1.0)
 
 # A figure that is exactly 300pt height and 200pt wide
 with lpl.size.context(200, 300):
-    fig, axes = lpl.subplots(3, 2, ratio"max")
+    fig, axes = lpl.subplots(3, 2, aspect="auto")
 ```
 
 
 ### Include figures in Latex
+
+The most important part of including the figures in latex is to not set the size of the figure using arguments like `[width=...]`:
 ```latex
-\begin{figure}[tb]
-    \centering
-    \includegraphics{test.pdf}
-    \caption{A test figure.}
-\end{figure}
+\includegraphics[width=\textwidth]{test.pdf}
 ```
 
-## `plt.tight_layout()`
+Instead, latexplotlib creates figures that are already properly sized. As such, figure can be added using only
+```latex
+\includegraphics}{test.pdf}
+```
 
-`plt.tight_layout()` changes the size of the produced figure. As such it is recommended to only use `plt.tight_layout()` with care! The same is true for `savefig(..., bbox_inches=None)`!
+### `plt.tight_layout()`
 
-Instead one should use `constrained_layout` which produces nice figures. `constrained_layout` is used by default with all latexplotlib styles.
+`plt.tight_layout()` changes the size of the produced figure. As such it is recommended to not use `plt.tight_layout()` with care! The same is true for `savefig(..., bbox_inches=None)`!
+
+Instead all latexplotlib styles used `constrained_layout` by default. `constrained_layout` has a similar functionality compared to `tight_layout`, however it is fully deterministic and does not change the size of the underlying figure.
 
 ## References
 
