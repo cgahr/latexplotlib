@@ -1,20 +1,12 @@
-# pylint: disable = import-error, missing-class-docstring, missing-function-docstring
-# pylint: disable = missing-module-docstring, no-self-use, protected-access
-# pylint: disable = redefined-outer-name, too-few-public-methods, too-many-arguments
-# pylint: disable = unused-argument
-
-
 import json
-import os
 
-import matplotlib
+import matplotlib as mpl
 import pytest
 
 from latexplotlib import _latexplotlib as lpl
 
 GOLDEN_RATIO = (5**0.5 + 1) / 2
-HEIGHT = 30000
-WIDTH = 40000
+
 
 CONFIGFILE = "config.ini"
 
@@ -35,12 +27,12 @@ def test__round(value):
     assert int(10 * value) / 10 == lpl._round(value)
 
 
-class Test_Config:
-    @pytest.fixture
+class TestConfig:
+    @pytest.fixture()
     def default(self):
         return {"apple": 10, "egg": 1}
 
-    @pytest.fixture
+    @pytest.fixture()
     def config(self, default, tmp_path, monkeypatch):
         monkeypatch.setattr(lpl, "DEFAULT_CONFIG", default)
         return lpl.Config(tmp_path.joinpath("directory", "tmp.ini"))
@@ -55,27 +47,27 @@ class Test_Config:
     def test_write(self, config, default):
         config._write(default)
 
-        assert os.path.exists(config.path)
+        assert config.path.exists()
 
-        with open(config.path, "r", encoding="utf-8") as fh:
+        with config.path.open(encoding="utf-8") as fh:
             cfg = json.load(fh)
         assert cfg == default
 
     def test_reset(self, config, default, mocker):
         default = {"apple": 10, "egg": 1}
         config._write(default)
-        assert os.path.exists(config.path)
+        assert config.path.exists()
 
         mocker.patch.object(config, "_write")
 
         config.reset()
 
-        assert not os.path.exists(config.path)
+        assert not config.path.exists()
         config._write.assert_called_once_with(default)
 
     def test__config_with_reset(self, config, default, mocker):
         mocker.spy(config, "reset")
-        assert not os.path.exists(config.path)
+        assert not config.path.exists()
 
         cfg = config._config()
 
@@ -85,7 +77,7 @@ class Test_Config:
     def test__config_wo_reset(self, config, default, mocker):
         config._write(default)
         mocker.spy(config, "reset")
-        assert os.path.exists(config.path)
+        assert config.path.exists()
 
         cfg = config._config()
 
@@ -106,23 +98,31 @@ class Test_Config:
         assert config["skyscraper"] == "apple"
 
 
-class Test_Size:
-    @pytest.fixture
-    def config(self, monkeypatch):
-        monkeypatch.setattr(lpl, "config", {"width": 10, "height": 20})
+class TestSize:
+    @pytest.fixture()
+    def width(self):
+        return 10
 
-    @pytest.fixture
+    @pytest.fixture()
+    def height(self):
+        return 20
+
+    @pytest.fixture()
+    def config(self, width, height, monkeypatch):  # noqa: PT004
+        monkeypatch.setattr(lpl, "config", {"width": width, "height": height})
+
+    @pytest.fixture()
     def size(self):
         return lpl.Size()
 
-    def test___init__(self, config):
+    def test___init__(self, width, height, config):
         size = lpl.Size()
 
-        assert size._width == 10
-        assert size._height == 20
+        assert size._width == width
+        assert size._height == height
 
-    def test_get(self, config, size):
-        assert size.get() == (10, 20)
+    def test_get(self, width, height, config, size):
+        assert size.get() == (width, height)
 
     def test_set(self, config, size):
         size.set(43, 44)
@@ -150,9 +150,10 @@ def test_convert_pt_to_inches():
 
 
 class TestFigsize:
-    def setup_function(self, monkeypatch, mocker):
+    @pytest.fixture(autouse=True)
+    def _set_size(self, monkeypatch, mocker, width, height):
         size = mocker.MagicMock()
-        size.get = mocker.MagicMock(return_value=(WIDTH, HEIGHT))
+        size.get = mocker.MagicMock(return_value=(width, height))
         monkeypatch.setattr(lpl, "size", size)
 
     @pytest.fixture(params=(1, 2, 3))
@@ -167,37 +168,45 @@ class TestFigsize:
     def scale(self, request):
         return request.param
 
-    def test_nrows_ncols(self, nrows, ncols, scale):
-        width = ncols * lpl._round(lpl.convert_pt_to_inches(WIDTH))
-        height = nrows * lpl._round(lpl.convert_pt_to_inches(WIDTH / GOLDEN_RATIO))
+    @pytest.fixture()
+    def width(self):
+        return 400
+
+    @pytest.fixture()
+    def height(self):
+        return 300
+
+    def test_nrows_ncols(self, nrows, ncols, width, scale):
+        width_in = ncols * lpl._round(lpl.convert_pt_to_inches(width))
+        height_in = nrows * lpl._round(lpl.convert_pt_to_inches(width / GOLDEN_RATIO))
 
         res_width, res_height = lpl.figsize(nrows, ncols, scale=scale)
-        assert res_width <= width * max(scale, 1)
-        assert res_height <= height * max(scale, 1)
+        assert res_width <= width_in * max(scale, 1)
+        assert res_height <= height_in * max(scale, 1)
 
     @pytest.mark.parametrize("aspect", [GOLDEN_RATIO, 1, 2])
-    def test_nrows_ncols_with_ratio(self, nrows, ncols, scale, aspect):
-        width = ncols * lpl._round(lpl.convert_pt_to_inches(WIDTH))
-        height = nrows * lpl._round(lpl.convert_pt_to_inches(WIDTH / aspect))
+    def test_nrows_ncols_with_ratio(self, nrows, ncols, scale, width, aspect):
+        width_in = ncols * lpl._round(lpl.convert_pt_to_inches(width))
+        height_in = nrows * lpl._round(lpl.convert_pt_to_inches(width / aspect))
 
         res_width, res_height = lpl.figsize(nrows, ncols, scale=scale, aspect=aspect)
-        assert res_width <= width * max(scale, 1)
-        assert res_height <= height * max(scale, 1)
-
-    def test_negative_fraction(self):
-        with pytest.raises(ValueError):
-            lpl.figsize(1, 1, scale=-1)
+        assert res_width <= width_in * max(scale, 1)
+        assert res_height <= height_in * max(scale, 1)
 
     @pytest.mark.parametrize("aspect", ["equal", "auto"])
-    def test_str_ratio(self, nrows, ncols, scale, aspect):
-        width = ncols * lpl._round(lpl.convert_pt_to_inches(WIDTH))
-        height = nrows * lpl._round(lpl.convert_pt_to_inches(WIDTH))
+    def test_str_ratio(self, nrows, ncols, scale, width, aspect):
+        width_in = ncols * lpl._round(lpl.convert_pt_to_inches(width))
+        height_in = nrows * lpl._round(lpl.convert_pt_to_inches(width))
 
         res_width, res_height = lpl.figsize(nrows, ncols, scale=scale, aspect=aspect)
-        assert res_width <= width * max(scale, 1)
-        assert res_height <= height * max(scale, 1)
+        assert res_width <= width_in * max(scale, 1)
+        assert res_height <= height_in * max(scale, 1)
 
-    def test_width_height_ratios(self, nrows, ncols):
+    @pytest.fixture()
+    def small_enough(self):
+        return 0.07
+
+    def test_width_height_ratios(self, nrows, ncols, small_enough):
         height_ratios = [0.5, 1.0, 0.1][:nrows]
         width_ratios = [0.7, 1.0, 0.3][:ncols]
 
@@ -213,19 +222,25 @@ class TestFigsize:
         ratio_theory = sum(height_ratios) / sum(width_ratios)
         ratio_test = res_height / res_width
 
-        assert abs(1 - ratio_theory / ratio_test) <= 0.07
+        assert abs(1 - ratio_theory / ratio_test) <= small_enough
 
     @pytest.mark.parametrize("aspect", ["test", "asd", "min"])
-    def test_invalid_ratio(self, aspect):
-        with pytest.raises(ValueError):
+    def test_invalid_aspect(self, aspect):
+        with pytest.raises(ValueError, match="'aspect' a float, 'equal' or 'auto'."):
             lpl.figsize(1, 1, aspect=aspect)
 
-    def test_invalid_scale(self):
-        with pytest.raises(ValueError):
+    def test_negative_scale(self):
+        with pytest.raises(ValueError, match="'scale' must be positive"):
             lpl.figsize(1, 1, scale=-1)
 
 
 class TestSubplots:
+    @pytest.fixture()
+    def _set_size(self, monkeypatch, mocker):
+        size = mocker.MagicMock()
+        size.get = mocker.MagicMock(return_value=(400, 300))
+        monkeypatch.setattr(lpl, "size", size)
+
     def test_args(self):
         lpl.subplots(1, 1)
         lpl.subplots(1, ncols=1)
@@ -245,8 +260,7 @@ class TestSubplots:
             lpl.subplots(1, 1, figsize=(3, 4))
 
     @pytest.mark.skipif(
-        matplotlib.__version_info__ < (3, 6),
-        reason="requires matplotlib 3.6.0 or higher",
+        mpl.__version_info__ < (3, 6), reason="requires matplotlib 3.6.0 or higher"
     )
     def test_width_height_ratios(self):
         lpl.subplots(
@@ -257,14 +271,18 @@ class TestSubplots:
             width_ratios=[0.25, 1.0, 0.25],
         )
 
-    def test_plot(self, show):
+    @pytest.mark.usefixtures("_set_size", "_show")
+    def test_plot(self):
+        height_ratios = [0.25, 1.0]
+        width_ratios = [0.25, 1.0, 0.25]
+
         fig, axes = lpl.subplots(
             2,
             3,
             aspect="equal",
             gridspec_kw={
-                "height_ratios": [0.25, 1.0],
-                "width_ratios": [0.25, 1.0, 0.25],
+                "height_ratios": height_ratios,
+                "width_ratios": width_ratios,
             },
         )
 
@@ -280,7 +298,8 @@ class TestSubplots:
 
         fig.suptitle("test")
 
-    def test_plot2(self, show):
+    @pytest.mark.usefixtures("_set_size", "_show")
+    def test_plot2(self):
         fig, axes = lpl.subplots(
             1,
             2,

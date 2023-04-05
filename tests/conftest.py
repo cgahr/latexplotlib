@@ -7,13 +7,13 @@ def pytest_addoption(parser):
 
 
 @pytest.fixture(autouse=True)
-def close_plots():
+def _close_plots():
     yield
     plt.close("all")
 
 
-@pytest.fixture
-def show(pytestconfig):
+@pytest.fixture()
+def _show(pytestconfig):
     yield
     if pytestconfig.getoption("plot"):
         plt.show(block=True)

@@ -1,9 +1,3 @@
-# pylint: disable = import-error, missing-class-docstring, missing-function-docstring
-# pylint: disable = missing-module-docstring, no-self-use, protected-access
-# pylint: disable = redefined-outer-name, too-few-public-methods, too-many-arguments
-# pylint: disable = unused-argument
-
-
 from pathlib import Path
 
 import matplotlib.pyplot as plt
@@ -20,5 +14,6 @@ class TestStyles:
         ), f"The style '{style}' has an invalid suffix!"
 
         plt.style.use(style)
-        if caplog.text != "":
-            raise AssertionError(f"The style '{style}' is invalid: {caplog.text}")
+        if caplog.text:
+            msg = f"The style '{style}' is invalid: {caplog.text}"
+            raise AssertionError(msg)

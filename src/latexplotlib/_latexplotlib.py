@@ -91,7 +91,7 @@ class Size:
         """
         return self._width, self._height
 
-    def set(self, width: int, height: int) -> None:
+    def set(self, width: int, height: int) -> None:  # noqa: A003
         """Sets the size of the latex page in pts.
 
         You can find the size of the latex page with the following commands:
@@ -212,9 +212,11 @@ def figsize(
         width and height of the figure in inches.
     """
     if scale < 0:
-        raise ValueError("'scale' must be positive")
+        msg = "'scale' must be positive"
+        raise ValueError(msg)
     if isinstance(aspect, str) and aspect not in ["equal", "auto"]:
-        raise ValueError("'aspect' a float, 'equal' or 'auto'.")
+        msg = "'aspect' a float, 'equal' or 'auto'."
+        raise ValueError(msg)
 
     if width_ratios is None:
         width_ratios = ncols * [1.0]
@@ -250,7 +252,7 @@ def subplots(
     ratio: Any = None,
     fraction: Any = None,
     **kwargs,
-) -> Tuple[Any, Any]:
+) -> Any:
     """A wrapper for matplotlib's 'plt.subplots' method
 
     This function wraps 'plt.subplots'
@@ -324,4 +326,4 @@ def subplots(
         height_ratios=height_ratios,
     )
 
-    return plt.subplots(nrows, ncols, figsize=_figsize, **kwargs)  # type: ignore
+    return plt.subplots(nrows, ncols, figsize=_figsize, **kwargs)
