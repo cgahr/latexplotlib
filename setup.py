@@ -7,35 +7,31 @@ This code is based on SciencePlots:
 https://github.com/garrettj403/SciencePlots/blob/master/setup.py
 
 """
-
 import atexit
-import glob
-import os
+import logging
 import shutil
+from pathlib import Path
 
-import matplotlib
+import matplotlib as mpl
 from setuptools import setup
 from setuptools.command.install import install
 
+logger = logging.getLogger()
 
-def install_styles():
-    # Find all style files
-    stylefiles = glob.glob("styles/**/*.mplstyle", recursive=True)
-    # Find stylelib directory (where the *.mplstyle files go)
-    mpl_stylelib_dir = os.path.join(matplotlib.get_configdir(), "stylelib")
-    if not os.path.exists(mpl_stylelib_dir):
-        os.makedirs(mpl_stylelib_dir)
-    # Copy files over
-    print("Installing styles into", mpl_stylelib_dir)
-    for stylefile in stylefiles:
-        print(os.path.basename(stylefile))
-        shutil.copy(
-            stylefile, os.path.join(mpl_stylelib_dir, os.path.basename(stylefile))
-        )
+
+def install_styles() -> None:
+    mpl_stylelib_dir = Path(mpl.get_configdir()) / "stylelib"
+    if not mpl_stylelib_dir.exists():
+        mpl_stylelib_dir.mkdir(parents=True)
+
+    logger.info("Installing styles into {dir}", extra={"dir": mpl_stylelib_dir})
+    for stylefile in Path("styles").glob("*.mplstyle"):
+        logger.info("copying {style}", extra={"style": stylefile.name})
+        shutil.copy(stylefile, mpl_stylelib_dir / stylefile.name)
 
 
 class PostInstallMoveFile(install):
-    def __init__(self, *args, **kwargs):
+    def __init__(self, *args, **kwargs) -> None:
         super().__init__(*args, **kwargs)
         atexit.register(install_styles)
 
