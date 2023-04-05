@@ -14,6 +14,6 @@ class TestStyles:
         ), f"The style '{style}' has an invalid suffix!"
 
         plt.style.use(style)
-        if caplog.text != "":
+        if caplog.text:
             msg = f"The style '{style}' is invalid: {caplog.text}"
             raise AssertionError(msg)
