@@ -69,65 +69,6 @@ testpaths = [
     "tests",
 ]
 
-[tool.pylint.main]
-ignore = [
-    ".cache",
-    ".git",
-    ".ipynb_checkpoints",
-    "__pycache__",
-    "build",
-    "build",
-    "dist",
-    "examples",
-    "setup*",
-    "tests",
-]
-ignore-patterns = [".*\\.md$"]
-persistent = true
-suggestion-mode = true
-
-[tool.pylint.basic]
-argument-naming-style = "snake_case"
-attr-naming-style = "snake_case"
-class-attribute-naming-style = "any"
-class-const-naming-style = "UPPER_CASE"
-class-naming-style = "PascalCase"
-const-naming-style = "UPPER_CASE"
-function-naming-style = "snake_case"
-good-names = ["df", "ax", "y1", "y2"]
-good-names-rgxs = ["([A-Za-z]{1}|[a-z]+[0-9]*|[A-Z]{1}.*)$"]
-method-naming-style = "snake_case"
-module-naming-style = "snake_case"
-variable-naming-style = "snake_case"
-
-[tool.pylint.exceptions]
-# Exceptions that will emit a warning when caught.
-overgeneral-exceptions = ["BaseException", "Exception"]
-
-[tool.pylint.format]
-max-line-length = "88"
-
-[tool.pylint.logging]
-logging-modules = ["logging"]
-disable = [
-    "missing-class-docstring",
-    "logging-format-interpolation",
-]
-[tool.pylint.per-file-ignores]
-"tests/*" = [
-    "import-error",
-    "missing-class-docstring",
-    "missing-function-docstring",
-    "missing-module-docstring",
-    "no-self-use",
-    "protected-access",
-    "redefined-outer-name",
-    "too-few-public-methods",
-    "too-many-arguments",
-    "unused-argument",
-]
-
-
 [tool.isort]
 profile = "black"
 
