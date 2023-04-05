@@ -254,7 +254,7 @@ def subplots(
     ratio: Any = None,
     fraction: Any = None,
     **kwargs,
-) -> Tuple[Any, Any]:
+) -> Any:
     """A wrapper for matplotlib's 'plt.subplots' method
 
     This function wraps 'plt.subplots'
@@ -328,4 +328,4 @@ def subplots(
         height_ratios=height_ratios,
     )
 
-    return plt.subplots(nrows, ncols, figsize=_figsize, **kwargs)  # type: ignore
+    return plt.subplots(nrows, ncols, figsize=_figsize, **kwargs)
