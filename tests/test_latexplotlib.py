@@ -1,6 +1,8 @@
 import json
+from pathlib import Path
 
 import matplotlib as mpl
+import matplotlib.pyplot as plt
 import pytest
 
 from latexplotlib import _latexplotlib as lpl
@@ -309,3 +311,8 @@ class TestSubplots:
                 "width_ratios": [0.2, 1.0],
             },
         )
+
+
+@pytest.mark.parametrize("style", Path("src/latexplotlib/styles/").iterdir())
+def test_styles_are_usable(style):
+    plt.style.use(style.name)
