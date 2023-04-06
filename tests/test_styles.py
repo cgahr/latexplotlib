@@ -3,7 +3,7 @@ from pathlib import Path
 import matplotlib.pyplot as plt
 import pytest
 
-styles_folder = Path("styles/")
+styles_folder = Path("src/latexplotlib/styles/")
 
 
 class TestStyles:
