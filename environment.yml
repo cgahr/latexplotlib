@@ -3,11 +3,10 @@ channels:
   - conda-forge
   - defaults
 dependencies:
-  - python>=3.6
   - ipython
   - pip
+  - pre-commit
+  - python>=3.6
   - pip:
-    - pre-commit
-    - build
-    - twine
+    - toml-sort
     - "--editable=.[tests,linters]"
