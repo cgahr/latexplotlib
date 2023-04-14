@@ -114,7 +114,7 @@ select = [
     "ANN",
     "S",
     "BLE",
-    "FBT", # unclear if good or not
+    "FBT",  # unclear if good or not
     "B",
     "A",
     "C4",
@@ -158,7 +158,7 @@ unfixable = ["I001"]
     "ANN",
     "ARG002",
     "INP",
-    "PLR0913", # too-many-arguments
+    "PLR0913",  # too-many-arguments
     "S101",
     "SLF001"
 ]
@@ -175,6 +175,7 @@ where = ["src"]
 [tool.tomlsort]
 all = true
 in_place = true
+spaces_before_inline_comment = 2
 spaces_indent_inline_array = 4
 
 [tool.tomlsort.overrides]
