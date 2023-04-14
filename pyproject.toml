@@ -171,3 +171,12 @@ unfixable = ["I001"]
     "S101",
     "SLF001",
 ]
+
+[tool.tomlsort]
+all = true
+in_place = true
+spaces_indent_inline_array = 4
+
+[tool.tomlsort.overrides]
+"project.classifiers".inline_arrays = false
+"tool.ruff.select".inline_arrays = false
