@@ -8,5 +8,4 @@ dependencies:
   - pre-commit
   - python>=3.6
   - pip:
-    - toml-sort
     - "--editable=.[tests,linters]"
