@@ -1,7 +1,6 @@
+import latexplotlib as lpl
 import matplotlib.pyplot as plt
 import numpy as np
-
-import latexplotlib as lpl
 
 plt.style.use("latex10pt")
 
