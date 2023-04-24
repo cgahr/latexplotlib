@@ -70,6 +70,12 @@ class Config:
         with self.path.open("w", encoding="utf-8") as fh:
             json.dump(cfg, fh, indent=4)
 
+    def reset(self) -> None:
+        if self.path.exists():
+            self.path.unlink()
+
+        self._write(DEFAULT_CONFIG)
+
     def __getitem__(self, name: str) -> ConfigData:
         return self._config()[name]
 
@@ -77,12 +83,6 @@ class Config:
         cfg = self._config()
         cfg[name] = value
         self._write(cfg)
-
-    def reset(self) -> None:
-        if self.path.exists():
-            self.path.unlink()
-
-        self._write(DEFAULT_CONFIG)
 
 
 config = Config(CONFIGPATH)
@@ -140,11 +140,11 @@ class Size:
 
         self._width, self._height = _width, _height
 
-    def __str__(self) -> str:
-        return str((self._width, self._height))
-
     def __repr__(self) -> str:
         return repr((self._width, self._height))
+
+    def __str__(self) -> str:
+        return str((self._width, self._height))
 
 
 size = Size()
