@@ -2,7 +2,17 @@ import json
 import warnings
 from contextlib import contextmanager
 from pathlib import Path
-from typing import TYPE_CHECKING, Any, Dict, Iterator, Optional, Sequence, Tuple, Union
+from typing import (
+    TYPE_CHECKING,
+    Any,
+    Dict,
+    Iterator,
+    Mapping,
+    Optional,
+    Sequence,
+    Tuple,
+    Union,
+)
 
 import matplotlib as mpl
 import matplotlib.pyplot as plt
@@ -38,6 +48,9 @@ def _round(val: float) -> float:
     return int(10 * val) / 10
 
 
+ConfigData = int
+
+
 class Config:
     def __init__(self, path: Path) -> None:
         if not path.parent.exists():
@@ -45,31 +58,31 @@ class Config:
 
         self.path = path
 
-    def _config(self) -> Dict[str, Any]:
+    def _config(self) -> Dict[str, ConfigData]:
         if not self.path.exists():
             self.reset()
 
         with self.path.open(encoding="utf-8") as fh:
-            cfg: Dict[str, Any] = json.load(fh)
+            cfg: Dict[str, ConfigData] = json.load(fh)
             return cfg
 
-    def _write(self, cfg: Dict[str, Any]) -> None:
+    def _write(self, cfg: Mapping[str, ConfigData]) -> None:
         with self.path.open("w", encoding="utf-8") as fh:
             json.dump(cfg, fh, indent=4)
-
-    def __getitem__(self, name: str) -> Any:
-        return self._config()[name]
-
-    def __setitem__(self, name: str, value: Any) -> None:
-        cfg = self._config()
-        cfg[name] = value
-        self._write(cfg)
 
     def reset(self) -> None:
         if self.path.exists():
             self.path.unlink()
 
         self._write(DEFAULT_CONFIG)
+
+    def __getitem__(self, name: str) -> ConfigData:
+        return self._config()[name]
+
+    def __setitem__(self, name: str, value: ConfigData) -> None:
+        cfg = self._config()
+        cfg[name] = value
+        self._write(cfg)
 
 
 config = Config(CONFIGPATH)
@@ -127,11 +140,11 @@ class Size:
 
         self._width, self._height = _width, _height
 
-    def __str__(self) -> str:
-        return str((self._width, self._height))
-
     def __repr__(self) -> str:
         return repr((self._width, self._height))
+
+    def __str__(self) -> str:
+        return str((self._width, self._height))
 
 
 size = Size()
@@ -247,13 +260,13 @@ def figsize(
 
 
 def subplots(
-    *args,
+    *args,  # noqa: ANN002
     scale: float = 1.0,
     aspect: Aspect = GOLDEN_RATIO,
-    ratio: Any = None,
-    fraction: Any = None,
-    **kwargs,
-) -> Any:
+    ratio: Any = None,  # noqa: ANN401
+    fraction: Any = None,  # noqa: ANN401
+    **kwargs,  # noqa: ANN003
+) -> Any:  # noqa: ANN401
     """A wrapper for matplotlib's 'plt.subplots' method
 
     This function wraps 'plt.subplots'

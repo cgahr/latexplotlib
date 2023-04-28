@@ -4,6 +4,7 @@
 [![image](https://img.shields.io/pypi/l/latexplotlib.svg)](https://pypi.python.org/pypi/latexplotlib)
 [![image](https://img.shields.io/pypi/pyversions/latexplotlib.svg)](https://pypi.python.org/pypi/latexplotlib)
 [![Actions status](https://github.com/cgahr/latexplotlib/actions/workflows/main.yml/badge.svg)](https://github.com/cgahr/latexplotlib/actions)
+[![Coverage Status](https://coveralls.io/repos/github/cgahr/latexplotlib/badge.svg?branch=main)](https://coveralls.io/github/cgahr/latexplotlib?branch=main)
 <a href="https://github.com/psf/black"><img alt="Code style: black" src="https://img.shields.io/badge/code%20style-black-000000.svg"></a>
 [![Ruff](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/charliermarsh/ruff/main/assets/badge/v1.json)](https://github.com/charliermarsh/ruff)
 

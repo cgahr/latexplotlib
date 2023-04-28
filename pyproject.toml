@@ -1,10 +1,10 @@
 [build-system]
 build-backend = "setuptools.build_meta"
-requires = ["setuptools", "matplotlib"]
+requires = ["matplotlib", "setuptools"]
 
 [project]
 authors = [
-    {name = "Constantin Gahr", email = "latexplotlib.gvxel@aleeas.com"},
+    {email = "latexplotlib.gvxel@aleeas.com", name = "Constantin Gahr"}
 ]
 classifiers = [
     "Programming Language :: Python :: 3.7",
@@ -13,11 +13,11 @@ classifiers = [
     "Programming Language :: Python :: 3.10",
     "Programming Language :: Python :: 3.11",
     "License :: OSI Approved :: MIT License",
-    "Operating System :: OS Independent",
+    "Operating System :: OS Independent"
 ]
 dependencies = [
     "appdirs",
-    "matplotlib",
+    "matplotlib"
 ]
 description = "Perfect matplotlib figures for latex"
 dynamic = ["version"]
@@ -26,7 +26,7 @@ keywords = [
     "matplotlib-figures",
     "matplotlib-style-sheets",
     "matplotlib-styles",
-    "python",
+    "python"
 ]
 license = {text = "MIT"}
 name = "latexplotlib"
@@ -34,40 +34,22 @@ readme = "README.md"
 requires-python = ">=3.7.1"
 
 [project.optional-dependencies]
+linters = [
+    "black",
+    "mypy",
+    "ruff",
+    "types-appdirs"
+]
 tests = [
     "coverage",
     "pytest",
-    "pytest-console-scripts",
     "pytest-cov",
-    "pytest-env",
-    "pytest-mock",
-]
-linters =  [
-    "black",
-    "isort",
-    "mypy",
-    "ruff",
-    "types-appdirs",
+    "pytest-mock"
 ]
 
 [project.urls]
 Homepage = "https://github.com/cgahr/latexplotlib"
 Issues = "https://github.com/cgahr/latexplotlib/issues"
-
-[tool.setuptools.dynamic]
-version = {attr = "latexplotlib._version.__version__"}
-
-[tool.setuptools.package-data]
-opinf =  ["py.typed"]
-
-[tool.setuptools.packages.find]
-where = ["src"]
-
-[tool.pytest.ini_options]
-addopts = "--cov=src --cov-report=html --cov-report=term"
-testpaths = [
-    "tests",
-]
 
 [tool.isort]
 profile = "black"
@@ -83,7 +65,7 @@ exclude = [
     "dist",
     "examples",
     "setup*",
-    "tests",
+    "tests"
 ]
 mypy_path = "src"
 no_implicit_optional = true
@@ -96,12 +78,23 @@ warn_unreachable = true
 warn_unused_configs = true
 
 [[tool.mypy.overrides]]
-module = [
-    "matplotlib.*",
-]
 ignore_missing_imports = true
+module = [
+    "matplotlib.*"
+]
+
+[tool.pytest.ini_options]
+addopts = "--cov=src --cov-report=html --cov-report=term"
+testpaths = [
+    "tests"
+]
 
 [tool.ruff]
+fix = true
+fixable = ["I"]
+ignore = [
+    "ANN101"  # missing-type-self
+]
 select = [
     "F",
     "E",
@@ -115,7 +108,7 @@ select = [
     "ANN",
     "S",
     "BLE",
-    "FBT", # unclear if good or not
+    "FBT",  # unclear if good or not
     "B",
     "A",
     "C4",
@@ -144,30 +137,46 @@ select = [
     "PL",
     "TRY",
     "NPY",
-    "RUF",
+    "RUF"
 ]
 target-version = "py38"
-ignore = [
-    "ANN002",
-    "ANN003",
-    "ANN101",
-    "ANN102",
-    "ANN401",
-    "I001",
-]
-unfixable = ["I001"]
+
+[tool.ruff.flake8-annotations]
+suppress-dummy-args = true
 
 [tool.ruff.per-file-ignores]
-"__init__.py" = ["F401", 'F403']
 "examples/*" = [
-    "INP",
-    "ERA001",
+    "ERA001",  # commented-out-code
+    "INP"  # implicit-namespace-package
 ]
 "tests/*" = [
     "ANN",
-    "ARG002",
-    "INP",
+    "ARG002",  # unused-method-argument
+    "INP",  # implicit-namespace-package
     "PLR0913",  # too-many-arguments
-    "S101",
-    "SLF001",
+    "S101",  # assert
+    "SLF001"  # private-member-access
 ]
+
+[tool.ruff.pylint]
+max-args = 5
+
+[tool.setuptools.dynamic]
+version = {attr = "latexplotlib._version.__version__"}
+
+[tool.setuptools.package-data]
+latexplotlib = ["py.typed"]
+"latexplotlib.styles" = ["*.mplstyle"]
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.tomlsort]
+all = true
+in_place = true
+spaces_before_inline_comment = 2
+spaces_indent_inline_array = 4
+
+[tool.tomlsort.overrides]
+"project.classifiers".inline_arrays = false
+"tool.ruff.select".inline_arrays = false
