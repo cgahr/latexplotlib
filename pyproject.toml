@@ -168,7 +168,8 @@ max-args = 5
 version = {attr = "latexplotlib._version.__version__"}
 
 [tool.setuptools.package-data]
-opinf = ["py.typed"]
+latexplotlib = ["py.typed"]
+"latexplotlib.styles" = ["*.mplstyle"]
 
 [tool.setuptools.packages.find]
 where = ["src"]
