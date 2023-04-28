@@ -3,9 +3,17 @@ channels:
   - conda-forge
   - defaults
 dependencies:
+  - black
+  - coverage
   - ipython
+  - matplotlib
+  - mypy
   - pip
   - pre-commit
+  - pytest
+  - pytest-cov
+  - pytest-mock
   - python>=3.6
+  - ruff
   - pip:
     - "--editable=.[tests,linters]"
