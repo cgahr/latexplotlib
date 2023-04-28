@@ -47,6 +47,9 @@ jobs:
       run: |
         pip install --upgrade pip
         pip install ".[tests]"
+    - name: Install coveralls
+      run:  pip install coveralls
+      if: ${{ matrix.coverage }}
     - name: run pytest
       run: pytest
     - name: Upload coverage report
