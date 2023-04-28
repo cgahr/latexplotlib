@@ -51,6 +51,9 @@ tests = [
 Homepage = "https://github.com/cgahr/latexplotlib"
 Issues = "https://github.com/cgahr/latexplotlib/issues"
 
+[tool.coverage.run]
+source = ["src"]
+
 [tool.isort]
 profile = "black"
 
@@ -84,7 +87,7 @@ module = [
 ]
 
 [tool.pytest.ini_options]
-addopts = "--cov=src --cov-report=html --cov-report=term"
+addopts = "--cov --cov-report=html --cov-report=term"
 testpaths = [
     "tests"
 ]
