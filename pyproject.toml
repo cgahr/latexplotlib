@@ -51,9 +51,6 @@ tests = [
 Homepage = "https://github.com/cgahr/latexplotlib"
 Issues = "https://github.com/cgahr/latexplotlib/issues"
 
-[tool.coverage.lcov]
-output = ".coverage/coverage.lcov"
-
 [tool.isort]
 profile = "black"
 
