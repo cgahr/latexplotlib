@@ -47,11 +47,8 @@ jobs:
       run: |
         pip install --upgrade pip
         pip install ".[tests]"
-    - name: Install coveralls
-      run:  pip install coveralls
-      if: ${{ matrix.coverage }}
     - name: run pytest
       run: pytest
-    - name: Upload coverage report
-      run: coveralls --service=github
+    - name: Coveralls GitHub Action
+      uses: coverallsapp/github-action@v1
       if: ${{ matrix.coverage }}
