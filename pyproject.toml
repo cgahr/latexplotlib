@@ -36,7 +36,6 @@ requires-python = ">=3.7.1"
 [project.optional-dependencies]
 linters = [
     "black",
-    "isort",
     "mypy",
     "ruff",
     "types-appdirs"
