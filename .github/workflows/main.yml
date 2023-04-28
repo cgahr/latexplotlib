@@ -51,5 +51,6 @@ jobs:
       run: pytest --cov=lcov
     - name: Coveralls GitHub Action
       uses: coverallsapp/github-action@v1
-      path-to-lcov: "coverage.lcov"
+      with:
+        path-to-lcov: "coverage.lcov"
       if: ${{ matrix.coverage }}
