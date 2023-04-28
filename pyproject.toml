@@ -43,9 +43,7 @@ linters = [
 tests = [
     "coverage",
     "pytest",
-    "pytest-console-scripts",
     "pytest-cov",
-    "pytest-env",
     "pytest-mock"
 ]
 
