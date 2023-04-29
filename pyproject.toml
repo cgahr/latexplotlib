@@ -34,12 +34,6 @@ readme = "README.md"
 requires-python = ">=3.7.1"
 
 [project.optional-dependencies]
-linters = [
-    "black",
-    "mypy",
-    "ruff",
-    "types-appdirs"
-]
 tests = [
     "coverage",
     "pytest",
@@ -50,6 +44,9 @@ tests = [
 [project.urls]
 Homepage = "https://github.com/cgahr/latexplotlib"
 Issues = "https://github.com/cgahr/latexplotlib/issues"
+
+[tool.black]
+line_length = 88
 
 [tool.coverage.run]
 source = ["src"]

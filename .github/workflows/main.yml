@@ -8,25 +8,6 @@ on:
     branches:
       - main
 jobs:
-  lint:
-    name: lint codebase
-    runs-on: ubuntu-latest
-    steps:
-    - uses: actions/checkout@v3
-    - name: Set up Python
-      uses: actions/setup-python@v3
-      with:
-        python-version: "3.11"
-    - name: Install dependencies
-      run: |
-        pip install --upgrade pip
-        pip install ".[linters]"
-    - name: Black code formatter
-      run: black src --check
-    - name: Ruff code checker
-      run: ruff src
-    - name: Mypy code formatter
-      run: mypy src
   test:
     name: pytest
     runs-on: ubuntu-latest
