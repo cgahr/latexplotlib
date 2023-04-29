@@ -19,11 +19,6 @@ ConfigData = Union[int, bool]
 
 
 class Config:
-
-    def _open(self, path: Path) -> Dict[str, ConfigData]:
-        with path.open(encoding="utf-8") as fh:
-            config: Dict[str, ConfigData] = json.load(fh)
-        return config
     def __init__(self, path: Path) -> None:
         self.path = path
 
@@ -31,6 +26,11 @@ class Config:
             self.reset()
 
         self._config = self._open(path)
+
+    def _open(self, path: Path) -> Dict[str, ConfigData]:
+        with path.open(encoding="utf-8") as fh:
+            config: Dict[str, ConfigData] = json.load(fh)
+        return config
 
     def _write(self, cfg: Mapping[str, ConfigData]) -> None:
         with self.path.open("w", encoding="utf-8") as fh:
