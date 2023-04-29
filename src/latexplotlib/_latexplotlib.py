@@ -1,13 +1,8 @@
-import json
 import warnings
-from contextlib import contextmanager
 from pathlib import Path
 from typing import (
     TYPE_CHECKING,
     Any,
-    Dict,
-    Iterator,
-    Mapping,
     Optional,
     Sequence,
     Tuple,
@@ -16,7 +11,8 @@ from typing import (
 
 import matplotlib as mpl
 import matplotlib.pyplot as plt
-from appdirs import user_config_dir
+
+from ._config import size
 
 if TYPE_CHECKING:
     from typing import Literal
@@ -27,127 +23,18 @@ else:
 
 
 GOLDEN_RATIO: float = (5**0.5 + 1) / 2
-NAME: str = "latexplotlib"
-
-CONFIGFILE: str = "config.ini"
-CONFIGDIR: Path = Path(user_config_dir(NAME))
-CONFIGPATH: Path = CONFIGDIR.joinpath(CONFIGFILE)
-DEFAULT_CONFIG: Dict[str, int] = {"width": 630, "height": 412}
 
 
 __all__ = [
     "convert_inches_to_pt",
     "convert_pt_to_inches",
     "figsize",
-    "size",
     "subplots",
 ]
 
 
 def _round(val: float) -> float:
     return int(10 * val) / 10
-
-
-ConfigData = int
-
-
-class Config:
-    def __init__(self, path: Path) -> None:
-        if not path.parent.exists():
-            path.parent.mkdir()
-
-        self.path = path
-
-    def _config(self) -> Dict[str, ConfigData]:
-        if not self.path.exists():
-            self.reset()
-
-        with self.path.open(encoding="utf-8") as fh:
-            cfg: Dict[str, ConfigData] = json.load(fh)
-            return cfg
-
-    def _write(self, cfg: Mapping[str, ConfigData]) -> None:
-        with self.path.open("w", encoding="utf-8") as fh:
-            json.dump(cfg, fh, indent=4)
-
-    def reset(self) -> None:
-        if self.path.exists():
-            self.path.unlink()
-
-        self._write(DEFAULT_CONFIG)
-
-    def __getitem__(self, name: str) -> ConfigData:
-        return self._config()[name]
-
-    def __setitem__(self, name: str, value: ConfigData) -> None:
-        cfg = self._config()
-        cfg[name] = value
-        self._write(cfg)
-
-
-config = Config(CONFIGPATH)
-
-
-class Size:
-    _width: int
-    _height: int
-
-    def __init__(self) -> None:
-        self._width, self._height = config["width"], config["height"]
-
-    def get(self) -> Tuple[int, int]:
-        """Returns the current size of the figure in pts.
-
-        Returns
-        -------
-        int, int
-            (width, height) of the page in pts.
-        """
-        return self._width, self._height
-
-    def set(self, width: int, height: int) -> None:  # noqa: A003
-        """Sets the size of the latex page in pts.
-
-        You can find the size of the latex page with the following commands:
-
-        \\the\\textwidth
-        \\the\\textheight
-
-        Parameters
-        ----------
-        width : int
-            The width of the latex page in pts.
-        height : int
-            The height of the latex page in pts.
-        """
-        config["width"], config["height"] = width, height
-        self._width, self._height = width, height
-
-    @contextmanager
-    def context(self, width: int, height: int) -> Iterator[None]:
-        """This context manager temporarily sets the size of the figure in pts.
-
-        Parameters
-        ----------
-        width : int
-            The width of the latex page in pts.
-        height : int
-            The height of the latex page in pts.
-        """
-        _width, _height = self._width, self._height
-        self._width, self._height = width, height
-        yield
-
-        self._width, self._height = _width, _height
-
-    def __repr__(self) -> str:
-        return repr((self._width, self._height))
-
-    def __str__(self) -> str:
-        return str((self._width, self._height))
-
-
-size = Size()
 
 
 def convert_pt_to_inches(pts: Union[int, float]) -> float:
@@ -346,14 +233,14 @@ def subplots(
 def delete_styles_from_previous_installation() -> None:
     """A helper function to remove old style files."""
     old = [
+        "latex9pt-minimal.mplstyle",
+        "latex9pt.mplstyle",
         "latex10pt-minimal.mplstyle",
         "latex10pt.mplstyle",
         "latex11pt-minimal.mplstyle",
         "latex11pt.mplstyle",
         "latex12pt-minimal.mplstyle",
         "latex12pt.mplstyle",
-        "latex9pt-minimal.mplstyle",
-        "latex9pt.mplstyle",
     ]
 
     styledir = Path(mpl.get_configdir()) / "stylelib"

@@ -1,8 +1,8 @@
+from ._config import size
 from ._latexplotlib import (
     convert_inches_to_pt,
     convert_pt_to_inches,
     figsize,
-    size,
     subplots,
 )
 from ._version import __version__
