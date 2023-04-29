@@ -51,6 +51,9 @@ tests = [
 Homepage = "https://github.com/cgahr/latexplotlib"
 Issues = "https://github.com/cgahr/latexplotlib/issues"
 
+[tool.black]
+line_length = 88
+
 [tool.coverage.run]
 source = ["src"]
 
