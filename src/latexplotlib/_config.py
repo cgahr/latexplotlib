@@ -33,6 +33,9 @@ class Config:
         return config
 
     def _write(self, cfg: Mapping[str, ConfigData]) -> None:
+        if not self.path.parent.exists():
+            self.path.parent.mkdir(parents=True)
+
         with self.path.open("w", encoding="utf-8") as fh:
             json.dump(cfg, fh, indent=4)
 

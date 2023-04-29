@@ -28,8 +28,8 @@ class TestConfig:
 
     @pytest.fixture()
     def path(self, tmp_path, monkeypatch):
-        path = tmp_path.joinpath("directory", "tmp.ini")
-        path.parent.mkdir()
+        path = tmp_path / "directory" / "dir2" / "tmp.ini"
+        path.parent.mkdir(parents=True)
         return path
 
     @pytest.fixture()
@@ -74,6 +74,25 @@ class TestConfig:
 
     def test__write(self, config, default, path):
         config.path.unlink()
+        config._write(default)
+
+        cfg = config._open(path)
+        assert cfg == default
+
+    def test__write_no_parent(self, config, default, path):
+        config.path.unlink()
+        config.path.parent.rmdir()
+
+        config._write(default)
+
+        cfg = config._open(path)
+        assert cfg == default
+
+    def test__write_no_parents_2(self, config, default, path):
+        config.path.unlink()
+        config.path.parent.rmdir()
+        config.path.parent.parent.rmdir()
+
         config._write(default)
 
         cfg = config._open(path)
