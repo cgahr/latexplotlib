@@ -1,3 +1,4 @@
+from ._cleanup import purge_old_styles
 from ._config import size
 from ._latexplotlib import (
     convert_inches_to_pt,
@@ -17,5 +18,5 @@ __all__ = [
     "__version__",
 ]
 
-
+purge_old_styles(__path__)
 make_styles_available(__path__)

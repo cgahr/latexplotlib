@@ -1,5 +1,4 @@
 import warnings
-from pathlib import Path
 from typing import (
     TYPE_CHECKING,
     Any,
@@ -9,7 +8,6 @@ from typing import (
     Union,
 )
 
-import matplotlib as mpl
 import matplotlib.pyplot as plt
 
 from ._config import size
@@ -228,25 +226,3 @@ def subplots(
     )
 
     return plt.subplots(nrows, ncols, figsize=_figsize, **kwargs)
-
-
-def delete_styles_from_previous_installation() -> None:
-    """A helper function to remove old style files."""
-    old = [
-        "latex9pt-minimal.mplstyle",
-        "latex9pt.mplstyle",
-        "latex10pt-minimal.mplstyle",
-        "latex10pt.mplstyle",
-        "latex11pt-minimal.mplstyle",
-        "latex11pt.mplstyle",
-        "latex12pt-minimal.mplstyle",
-        "latex12pt.mplstyle",
-    ]
-
-    styledir = Path(mpl.get_configdir()) / "stylelib"
-
-    for name in old:
-        style = styledir / name
-
-        if style.exists() and input(f"delete {style}? [y/N]") == "y":
-            style.unlink()
