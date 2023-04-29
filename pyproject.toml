@@ -48,6 +48,9 @@ Issues = "https://github.com/cgahr/latexplotlib/issues"
 [tool.black]
 line_length = 88
 
+[tool.coverage.report]
+exclude_lines = ["if TYPE_CHECKING:"]
+
 [tool.coverage.run]
 source = ["src"]
 
