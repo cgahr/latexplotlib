@@ -75,7 +75,7 @@ def convert_inches_to_pt(inches: float) -> float:
     return inches * 864.0 * 250.0 / 249.0 / 12.0
 
 
-def figsize(
+def figsize(  # noqa: PLR0913
     nrows: int = 1,
     ncols: int = 1,
     *,
