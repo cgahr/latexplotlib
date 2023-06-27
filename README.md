@@ -203,17 +203,16 @@ with lpl.size.context(200, 300):
 
 The most important part of including the figures in latex is to not set the size of the figure using arguments like `[width=...]`:
 ```latex
-\includegraphics[width=\textwidth]{test.pdf}
+\includegraphics{test.pdf}
 ```
-
-Instead, latexplotlib creates figures that are already properly sized. As such, figure can be added using only
+Observe that we did NOT adjust the size using arguments like `[width=...]`:
 ```latex
-\includegraphics}{test.pdf}
+\includegraphics[width=\textwidth]{test.pdf}
 ```
 
 ### `plt.tight_layout()`
 
-`plt.tight_layout()` changes the size of the produced figure. As such it is recommended to not use `plt.tight_layout()` with care! The same is true for `savefig(..., bbox_inches=None)`!
+`plt.tight_layout()` changes the size of the produced figure. As such it is recommended to not use `plt.tight_layout()` at all! The same is true for `savefig(..., bbox_inches=None)`!
 
 Instead all latexplotlib styles used `constrained_layout` by default. `constrained_layout` has a similar functionality compared to `tight_layout`, however it is fully deterministic and does not change the size of the underlying figure.
 
@@ -224,3 +223,4 @@ This package is inspired by the following sources:
 - Code: https://pypi.org/project/SciencePlots/
 - Figure sizes: https://jwalton.info/Embed-Publication-Matplotlib-Latex/
 - Color palette (Okabe Ito): https://clauswilke.com/dataviz/color-basics.html
+- Golden ratio: https://en.wikipedia.org/wiki/Golden_ratio
