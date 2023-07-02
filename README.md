@@ -21,11 +21,11 @@ pip install latexplotlib
 ```python
 import latexplotlib as lpl
 
-plt.style.use('latex10pt')
+lpl.style.use('latex10pt')
 # lpl.style.use('latex10pt-minimal')
 ```
 
-3. replace all `plt.subplots` with `lpl.subplots`:
+3. replace all usages of `plt` with `lpl`. Only `plt.subplots` changes its behavior:
 ```python
 #  fig, axes = plt.subplots(2, 3)
 fig, axes = lpl.subplots(2, 3)
@@ -70,7 +70,7 @@ import numpy as np
 
 import latexplotlib as lpl
 
-plt.style.use("latex10pt-minimal")
+lpl.style.use("latex10pt-minimal")
 # lpl.size.set(200, 400)
 with lpl.size.context(200, 400):
     fig, ax = lpl.subplots(1, 1)
@@ -86,8 +86,8 @@ ax.set_title("Perfect matplotlib figures for \\LaTeX")
 ax.grid()
 
 fig.legend()
-plt.savefig("example_poly_minimal")
-plt.savefig("example_poly_minimal.png")
+fig.savefig("example_poly_minimal")
+fig.savefig("example_poly_minimal.png")
 ```
 
 <p align="center">
@@ -100,10 +100,9 @@ The non-minimal versions set additional defaults to create figures that are acce
 ```python
 import matplotlib.pyplot as plt
 import numpy as np
-import latexplotlib as lpl
 
 
-plt.style.use("latex10pt")
+lpl.style.use("latex10pt")
 
 # lpl.size.set(200, 400)
 with lpl.size.context(200, 400):
@@ -130,7 +129,7 @@ fig.savefig("example_poly.png")
 Both styles change the defaults of the `plt.savefig` command. The new defaults are
 
 ```python
-plt.savefig(
+lpl.savefig(
     ...,
     bbox_inches=None,
     dpi=300,
@@ -164,8 +163,6 @@ lpl.size()  # (200, 400)
 
 ### Create figures for latex
 ```python
-import matplotlib.pyplot as plt
-
 import latexplotlib as lpl
 
 
@@ -183,8 +180,6 @@ fig, axes = lpl.subplots(1, 3, scale=0.8, aspect='equal')
 The `aspect` keyword controls the ratio of height to width. The default is the Golden ratio. `aspect` can also be `equal` (i.e. `aspect=1` )or `auto`. In the latter case, the figure fills the available space.
 
 ```python
-import matplotlib.pyplot as plt
-
 import latexplotlib as lpl
 
 # A 3 by 2 figure where each subplots height to width ratio is the golden ratio
