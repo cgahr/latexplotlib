@@ -42,6 +42,7 @@ tests = [
 ]
 
 [project.urls]
+Changelog = "https://github.com/cgahr/latexplotlib/blob/main/CHANGES.md"
 Homepage = "https://github.com/cgahr/latexplotlib"
 Issues = "https://github.com/cgahr/latexplotlib/issues"
 
