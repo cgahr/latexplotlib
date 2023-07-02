@@ -1,8 +1,7 @@
 import latexplotlib as lpl
-import matplotlib.pyplot as plt
 import numpy as np
 
-plt.style.use("latex10pt-minimal")
+lpl.style.use("latex10pt-minimal")
 # lpl.size.set(200, 400)
 with lpl.size.context(200, 400):
     fig, ax = lpl.subplots(1, 1)
@@ -18,5 +17,5 @@ ax.set_title("Perfect matplotlib figures for \\LaTeX")
 ax.grid()
 
 fig.legend()
-plt.savefig("example_poly_minimal")
-plt.savefig("example_poly_minimal.png")
+fig.savefig("example_poly_minimal")
+fig.savefig("example_poly_minimal.png")

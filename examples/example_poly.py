@@ -1,8 +1,7 @@
 import latexplotlib as lpl
-import matplotlib.pyplot as plt
 import numpy as np
 
-plt.style.use("latex10pt")
+lpl.style.use("latex10pt")
 
 # lpl.size.set(200, 400)
 with lpl.size.context(200, 400):
