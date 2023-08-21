@@ -35,7 +35,7 @@ def _round(val: float) -> float:
     return int(10 * val) / 10
 
 
-def convert_pt_to_inches(pts: Union[int, float]) -> float:
+def convert_pt_to_inches(pts: float) -> float:
     """Converts a length in pts to a length in inches.
 
     Parameters
