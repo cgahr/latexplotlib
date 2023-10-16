@@ -16,4 +16,4 @@ dependencies:
   - python>=3.8
   - ruff
   - pip:
-    - "--editable=.[develop]"
+    - "--editable=.[tests]"

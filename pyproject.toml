@@ -31,12 +31,11 @@ keywords = [
 license = {text = "MIT"}
 name = "latexplotlib"
 readme = "README.md"
-requires-python = ">=3.7.1"
+requires-python = ">=3.8"
 
 [project.optional-dependencies]
-develop = [
+tests = [
     "coverage",
-    "pre-commit",
     "pytest",
     "pytest-cov",
     "pytest-mock"
