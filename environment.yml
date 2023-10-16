@@ -13,7 +13,7 @@ dependencies:
   - pytest
   - pytest-cov
   - pytest-mock
-  - python>=3.6
+  - python>=3.8
   - ruff
   - pip:
-    - "--editable=.[tests,linters]"
+    - "--editable=.[develop]"
