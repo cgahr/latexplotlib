@@ -14,19 +14,11 @@ repos:
     rev: v0.23.1
     hooks:
     -   id: toml-sort-fix
-# -   repo: https://github.com/bwhmather/ssort
-#     rev: v0.11.6
-#     hooks:
-#     -   id: ssort
-#         exclude: __init__.py
--   repo: https://github.com/psf/black
-    rev: 23.10.1
-    hooks:
-    -   id: black
 -   repo: https://github.com/astral-sh/ruff-pre-commit
     rev: 'v0.1.4'
     hooks:
     -   id: ruff
+    -   id: ruff-format
 -   repo: https://github.com/pre-commit/mirrors-mypy
     rev: 'v1.6.1'
     hooks:
