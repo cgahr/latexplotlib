@@ -8,13 +8,13 @@ figure.dpi: 200
 font.family: serif
 
 # Fontsize
-font.size: 11
-axes.labelsize: 10
-axes.titlesize: 11
-legend.fontsize: 9
-legend.title_fontsize: 10
-xtick.labelsize: 9
-ytick.labelsize: 9
+font.size: 9
+axes.labelsize: 8
+axes.titlesize: 9
+legend.fontsize: 7
+legend.title_fontsize: 8
+xtick.labelsize: 7
+ytick.labelsize: 7
 
 # Latex
 text.usetex: True

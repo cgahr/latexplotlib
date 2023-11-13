@@ -37,13 +37,13 @@ lines.linewidth: 1.
 font.family: serif
 
 # Fontsize
-font.size: 10
-axes.labelsize: 9
-axes.titlesize: 10
-legend.fontsize: 8
-legend.title_fontsize: 9
-xtick.labelsize: 8
-ytick.labelsize: 8
+font.size: 8
+axes.labelsize: 7
+axes.titlesize: 8
+legend.fontsize: 6
+legend.title_fontsize: 7
+xtick.labelsize: 6
+ytick.labelsize: 6
 
 # Grid
 axes.axisbelow : True
