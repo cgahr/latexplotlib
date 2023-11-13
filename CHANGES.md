@@ -14,3 +14,9 @@ This release exports all functions in `matplotlib.pyplot` to `latexplotlib`. Thi
 - update to reflect `plt->lpl` changes
 - add changelog
 - updated example code to reflect new changes
+
+## Version 0.8.0
+
+- support for python 3.12
+- deprecate python 3.7 support
+- decrease all font sizes by 2. With the previous style, the labels where far to big compared to the surrounding text.
