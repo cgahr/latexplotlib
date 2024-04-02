@@ -46,9 +46,6 @@ Changelog = "https://github.com/cgahr/latexplotlib/blob/main/CHANGES.md"
 Homepage = "https://github.com/cgahr/latexplotlib"
 Issues = "https://github.com/cgahr/latexplotlib/issues"
 
-[tool.black]
-line_length = 88
-
 [tool.coverage.report]
 exclude_lines = ["if TYPE_CHECKING:"]
 
@@ -57,6 +54,58 @@ source = ["src"]
 
 [tool.isort]
 profile = "black"
+
+[tool.lint.ruff]
+fix = true
+fixable = ["I"]
+ignore = [
+    "ANN101"  # missing-type-self
+]
+select = [
+    "A",
+    "ANN",
+    "ARG",
+    "B",
+    "BLE",
+    "C4",
+    "C90",
+    "DTZ",
+    "E",
+    "EM",
+    "ERA",
+    "EXE",
+    "F",
+    "FBT",  # unclear if good or not
+    "G",
+    "I",
+    "ICN",
+    "INP",
+    "ISC",
+    "N",
+    "NPY",
+    "PGH",
+    "PIE",
+    "PL",
+    "PT",
+    "PTH",
+    "PYI",
+    "RET",
+    "RSE",
+    "RUF",
+    "S",
+    "SIM",
+    "SLF",
+    "T10",
+    "T20",
+    "TCH",
+    "TID",
+    "TRY",
+    # "D",
+    "UP",
+    "W",
+    "YTT"
+]
+target-version = "py38"
 
 [tool.mypy]
 check_untyped_defs = true
@@ -92,58 +141,6 @@ addopts = "--cov --cov-report=html --cov-report=term"
 testpaths = [
     "tests"
 ]
-
-[tool.ruff]
-fix = true
-fixable = ["I"]
-ignore = [
-    "ANN101"  # missing-type-self
-]
-select = [
-    "F",
-    "E",
-    "W",
-    "C90",
-    "I",
-    "N",
-    # "D",
-    "UP",
-    "YTT",
-    "ANN",
-    "S",
-    "BLE",
-    "FBT",  # unclear if good or not
-    "B",
-    "A",
-    "C4",
-    "DTZ",
-    "T10",
-    "EM",
-    "EXE",
-    "ISC",
-    "ICN",
-    "G",
-    "INP",
-    "PIE",
-    "T20",
-    "PYI",
-    "PT",
-    "RSE",
-    "RET",
-    "SLF",
-    "SIM",
-    "TID",
-    "TCH",
-    "ARG",
-    "PTH",
-    "ERA",
-    "PGH",
-    "PL",
-    "TRY",
-    "NPY",
-    "RUF"
-]
-target-version = "py38"
 
 [tool.ruff.flake8-annotations]
 suppress-dummy-args = true

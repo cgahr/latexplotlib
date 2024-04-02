@@ -29,7 +29,7 @@ repos:
     -   id: pytest
         name: pytest
         entry: pytest
-        language: conda
+        language: python
         pass_filenames: false
         always_run: true
 fail_fast: true
