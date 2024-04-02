@@ -15,12 +15,12 @@ repos:
     hooks:
     -   id: toml-sort-fix
 -   repo: https://github.com/astral-sh/ruff-pre-commit
-    rev: 'v0.1.6'
+    rev: 'v0.3.5'
     hooks:
     -   id: ruff
     -   id: ruff-format
 -   repo: https://github.com/pre-commit/mirrors-mypy
-    rev: 'v1.7.1'
+    rev: 'v1.9.0'
     hooks:
     -   id: mypy
         exclude: tests
@@ -29,7 +29,7 @@ repos:
     -   id: pytest
         name: pytest
         entry: pytest
-        language: conda
+        language: python
         pass_filenames: false
         always_run: true
 fail_fast: true
