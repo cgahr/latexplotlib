@@ -1,6 +1,7 @@
-import latexplotlib as lpl
 import matplotlib.pyplot as plt
 import pytest
+
+import latexplotlib as lpl
 
 
 def test_plt_functions_available():

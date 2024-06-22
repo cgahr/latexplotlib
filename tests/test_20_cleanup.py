@@ -1,5 +1,6 @@
-import latexplotlib._cleanup as cleanup
 import pytest
+
+import latexplotlib._cleanup as cleanup
 
 
 def test_styles():

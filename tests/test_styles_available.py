@@ -1,8 +1,9 @@
 from pathlib import Path
 
-import latexplotlib  # noqa: F401
 import matplotlib.pyplot as plt
 import pytest
+
+import latexplotlib  # noqa: F401
 
 
 @pytest.mark.parametrize("style", Path("src/latexplotlib/styles/").iterdir())

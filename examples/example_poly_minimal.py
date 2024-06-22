@@ -1,5 +1,6 @@
-import latexplotlib as lpl
 import numpy as np
+
+import latexplotlib as lpl
 
 lpl.style.use("latex10pt-minimal")
 # lpl.size.set(200, 400)
