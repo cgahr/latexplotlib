@@ -98,7 +98,6 @@ xfail_strict = true
 [tool.ruff]
 fix = true
 src = ["src"]
-target-version = "py38"
 
 [tool.ruff.lint]
 fixable = ["I"]
