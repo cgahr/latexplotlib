@@ -55,8 +55,11 @@ source = ["src"]
 [tool.isort]
 profile = "black"
 
-[tool.lint.ruff]
+[tool.ruff]
 fix = true
+src= ["src"]
+target-version = "py38"
+[tool.ruff.lint]
 fixable = ["I"]
 ignore = [
     "ANN101"  # missing-type-self
@@ -105,12 +108,11 @@ select = [
     "W",
     "YTT"
 ]
-target-version = "py38"
 
-[tool.lint.ruff.flake8-annotations]
+[tool.ruff.lint.flake8-annotations]
 suppress-dummy-args = true
 
-[tool.lint.ruff.per-file-ignores]
+[tool.ruff.lint.per-file-ignores]
 "examples/*" = [
     "ERA001",  # commented-out-code
     "INP"  # implicit-namespace-package
@@ -124,7 +126,7 @@ suppress-dummy-args = true
     "SLF001"  # private-member-access
 ]
 
-[tool.lint.ruff.pylint]
+[tool.ruff.lint.pylint]
 max-args = 5
 
 [tool.mypy]
@@ -167,8 +169,8 @@ testpaths = [
 ]
 xfail_strict = true
 
-[tool.ruff]
-src = ["src"]
+# [tool.ruff]
+# src = ["src"]
 
 [tool.setuptools.dynamic]
 version = {attr = "latexplotlib._version.__version__"}
