@@ -24,6 +24,10 @@ repos:
     rev: v0.23.1
     hooks:
     -   id: toml-sort-fix
+-   repo: https://github.com/google/yamlfmt
+    rev: "v0.12.1"
+    hooks:
+    -   id: yamlfmt
 -   repo: https://github.com/codespell-project/codespell
     rev: "v2.3.0"
     hooks:
