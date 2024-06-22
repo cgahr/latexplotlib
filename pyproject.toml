@@ -157,10 +157,14 @@ module = [
 ]
 
 [tool.pytest.ini_options]
-addopts = "--cov --cov-report=html --cov-report=term"
+addopts = ["--cov", "--cov-report=html", "--cov-report=term", "--strict-config", "--strict-markers", "-ra"]
+filterwarnings = ["error", "default::DeprecationWarning"]
+log_cli_level = "INFO"
+minversion = 7
 testpaths = [
     "tests"
 ]
+xfail_strict = true
 
 
 [tool.setuptools.dynamic]
@@ -181,4 +185,5 @@ spaces_indent_inline_array = 4
 
 [tool.tomlsort.overrides]
 "project.classifiers".inline_arrays = false
+"tool.pytest.ini_options.filterwarnings".inline_arrays = false
 "tool.ruff.select".inline_arrays = false
