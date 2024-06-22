@@ -55,10 +55,51 @@ source = ["src"]
 [tool.isort]
 profile = "black"
 
+[tool.mypy]
+check_untyped_defs = true
+enable_error_code = ["ignore-without-code", "redundant-expr", "truthy-bool"]
+exclude = [
+    ".cache",
+    ".git",
+    ".ipynb_checkpoints",
+    "__pycache__",
+    "build",
+    "dist",
+    "examples",
+    "setup*",
+    "tests"
+]
+mypy_path = "src"
+no_implicit_optional = true
+no_implicit_reexport = true
+strict = true
+strict_equality = true
+warn_redundant_casts = true
+warn_return_any = true
+warn_unreachable = true
+warn_unused_configs = true
+
+[[tool.mypy.overrides]]
+ignore_missing_imports = true
+module = [
+    "matplotlib.*"
+]
+
+[tool.pytest.ini_options]
+addopts = ["--cov", "--cov-report=html", "--cov-report=term", "--strict-config", "--strict-markers", "-ra"]
+filterwarnings = ["error", "default::DeprecationWarning"]
+log_cli_level = "INFO"
+minversion = 7
+testpaths = [
+    "tests"
+]
+xfail_strict = true
+
 [tool.ruff]
 fix = true
-src= ["src"]
+src = ["src"]
 target-version = "py38"
+
 [tool.ruff.lint]
 fixable = ["I"]
 ignore = [
@@ -128,49 +169,6 @@ suppress-dummy-args = true
 
 [tool.ruff.lint.pylint]
 max-args = 5
-
-[tool.mypy]
-check_untyped_defs = true
-enable_error_code = ["ignore-without-code", "redundant-expr", "truthy-bool"]
-exclude = [
-    ".cache",
-    ".git",
-    ".ipynb_checkpoints",
-    "__pycache__",
-    "build",
-    "dist",
-    "examples",
-    "setup*",
-    "tests"
-]
-mypy_path = "src"
-no_implicit_optional = true
-no_implicit_reexport = true
-strict = true
-strict_equality = true
-warn_redundant_casts = true
-warn_return_any = true
-warn_unreachable = true
-warn_unused_configs = true
-
-[[tool.mypy.overrides]]
-ignore_missing_imports = true
-module = [
-    "matplotlib.*"
-]
-
-[tool.pytest.ini_options]
-addopts = ["--cov", "--cov-report=html", "--cov-report=term", "--strict-config", "--strict-markers", "-ra"]
-filterwarnings = ["error", "default::DeprecationWarning"]
-log_cli_level = "INFO"
-minversion = 7
-testpaths = [
-    "tests"
-]
-xfail_strict = true
-
-# [tool.ruff]
-# src = ["src"]
 
 [tool.setuptools.dynamic]
 version = {attr = "latexplotlib._version.__version__"}
