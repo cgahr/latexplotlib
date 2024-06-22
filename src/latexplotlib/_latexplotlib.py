@@ -145,12 +145,12 @@ def figsize(  # noqa: PLR0913
 
 
 def subplots(
-    *args,  # noqa: ANN002
+    *args: Any,  # noqa: ANN002
     scale: float = 1.0,
     aspect: Aspect = GOLDEN_RATIO,
     ratio: Any = None,  # noqa: ANN401
     fraction: Any = None,  # noqa: ANN401
-    **kwargs,  # noqa: ANN003
+    **kwargs: Any,  # noqa: ANN003
 ) -> Any:  # noqa: ANN401
     """A wrapper for matplotlib's 'plt.subplots' method
 
