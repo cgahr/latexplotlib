@@ -16,7 +16,7 @@ dependencies:
   - python>=3.8
   - ruff
   - pip:
-    - ruff-lsp
-    - python-lsp-server
-    - pylsp-mypy
-    - "--editable=.[tests]"
+      - ruff-lsp
+      - python-lsp-server
+      - pylsp-mypy
+      - "--editable=.[tests]"
