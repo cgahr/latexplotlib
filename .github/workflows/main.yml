@@ -1,6 +1,9 @@
 name: CI
-
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.sha }}
+  cancel-in-progress: true
 on:
+  workflow_dispatch:
   push:
     branches:
       - main
@@ -16,22 +19,22 @@ jobs:
         python-version: ["3.8", "3.9", "3.10", "3.12"]
         coverage: [false]
         include:
-        - python-version: "3.11"
-          coverage: true
+          - python-version: "3.11"
+            coverage: true
     steps:
-    - uses: actions/checkout@v3
-    - name: Set up Python ${{ matrix.python-version }}
-      uses: actions/setup-python@v4
-      with:
-        python-version: ${{ matrix.python-version }}
-    - name: Install dependencies
-      run: |
-        pip install --upgrade pip
-        pip install -e ".[tests]"
-    - name: run pytest
-      run: pytest --cov-report=lcov
-    - name: Coveralls GitHub Action
-      uses: coverallsapp/github-action@v1
-      with:
-        path-to-lcov: "coverage.lcov"
-      if: ${{ matrix.coverage }}
+      - uses: actions/checkout@v3
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v4
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Install dependencies
+        run: |
+          pip install --upgrade pip
+          pip install -e ".[tests]"
+      - name: run pytest
+        run: pytest --cov-report=lcov
+      - name: Coveralls GitHub Action
+        uses: coverallsapp/github-action@v1
+        with:
+          path-to-lcov: "coverage.lcov"
+        if: ${{ matrix.coverage }}

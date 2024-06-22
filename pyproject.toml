@@ -55,8 +55,51 @@ source = ["src"]
 [tool.isort]
 profile = "black"
 
-[tool.lint.ruff]
+[tool.mypy]
+check_untyped_defs = true
+enable_error_code = ["ignore-without-code", "redundant-expr", "truthy-bool"]
+exclude = [
+    ".cache",
+    ".git",
+    ".ipynb_checkpoints",
+    "__pycache__",
+    "build",
+    "dist",
+    "examples",
+    "setup*",
+    "tests"
+]
+mypy_path = "src"
+no_implicit_optional = true
+no_implicit_reexport = true
+strict = true
+strict_equality = true
+warn_redundant_casts = true
+warn_return_any = true
+warn_unreachable = true
+warn_unused_configs = true
+
+[[tool.mypy.overrides]]
+ignore_missing_imports = true
+module = [
+    "matplotlib.*"
+]
+
+[tool.pytest.ini_options]
+addopts = ["--cov", "--cov-report=html", "--cov-report=term", "--strict-config", "--strict-markers", "-ra"]
+filterwarnings = ["error", "default::DeprecationWarning"]
+log_cli_level = "INFO"
+minversion = 7
+testpaths = [
+    "tests"
+]
+xfail_strict = true
+
+[tool.ruff]
 fix = true
+src = ["src"]
+
+[tool.ruff.lint]
 fixable = ["I"]
 ignore = [
     "ANN101"  # missing-type-self
@@ -100,52 +143,16 @@ select = [
     "TCH",
     "TID",
     "TRY",
-    # "D",
     "UP",
+    # "D",
     "W",
     "YTT"
 ]
-target-version = "py38"
 
-[tool.mypy]
-check_untyped_defs = true
-exclude = [
-    ".cache",
-    ".git",
-    ".ipynb_checkpoints",
-    "__pycache__",
-    "build",
-    "dist",
-    "examples",
-    "setup*",
-    "tests"
-]
-mypy_path = "src"
-no_implicit_optional = true
-no_implicit_reexport = true
-show_error_codes = true
-strict_equality = true
-warn_redundant_casts = true
-warn_return_any = true
-warn_unreachable = true
-warn_unused_configs = true
-
-[[tool.mypy.overrides]]
-ignore_missing_imports = true
-module = [
-    "matplotlib.*"
-]
-
-[tool.pytest.ini_options]
-addopts = "--cov --cov-report=html --cov-report=term"
-testpaths = [
-    "tests"
-]
-
-[tool.ruff.flake8-annotations]
+[tool.ruff.lint.flake8-annotations]
 suppress-dummy-args = true
 
-[tool.ruff.per-file-ignores]
+[tool.ruff.lint.per-file-ignores]
 "examples/*" = [
     "ERA001",  # commented-out-code
     "INP"  # implicit-namespace-package
@@ -159,7 +166,7 @@ suppress-dummy-args = true
     "SLF001"  # private-member-access
 ]
 
-[tool.ruff.pylint]
+[tool.ruff.lint.pylint]
 max-args = 5
 
 [tool.setuptools.dynamic]
@@ -180,4 +187,5 @@ spaces_indent_inline_array = 4
 
 [tool.tomlsort.overrides]
 "project.classifiers".inline_arrays = false
+"tool.pytest.ini_options.filterwarnings".inline_arrays = false
 "tool.ruff.select".inline_arrays = false

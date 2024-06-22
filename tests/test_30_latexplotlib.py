@@ -1,5 +1,6 @@
 import matplotlib as mpl
 import pytest
+
 from latexplotlib import _latexplotlib as lpl
 
 GOLDEN_RATIO = (5**0.5 + 1) / 2

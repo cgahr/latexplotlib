@@ -80,7 +80,7 @@ class Size:
         """
         return self._width, self._height
 
-    def set(self, width: int, height: int) -> None:  # noqa: A003
+    def set(self, width: int, height: int) -> None:
         """Sets the size of the latex page in pts.
 
         You can find the size of the latex page with the following commands:

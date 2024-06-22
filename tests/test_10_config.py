@@ -1,6 +1,7 @@
 import json
 
 import pytest
+
 from latexplotlib import _config as cfg
 
 GOLDEN_RATIO = (5**0.5 + 1) / 2
