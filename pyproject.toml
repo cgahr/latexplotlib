@@ -100,12 +100,32 @@ select = [
     "TCH",
     "TID",
     "TRY",
-    # "D",
     "UP",
+    # "D",
     "W",
     "YTT"
 ]
 target-version = "py38"
+
+[tool.lint.ruff.flake8-annotations]
+suppress-dummy-args = true
+
+[tool.lint.ruff.per-file-ignores]
+"examples/*" = [
+    "ERA001",  # commented-out-code
+    "INP"  # implicit-namespace-package
+]
+"tests/*" = [
+    "ANN",
+    "ARG002",  # unused-method-argument
+    "INP",  # implicit-namespace-package
+    "PLR0913",  # too-many-arguments
+    "S101",  # assert
+    "SLF001"  # private-member-access
+]
+
+[tool.lint.ruff.pylint]
+max-args = 5
 
 [tool.mypy]
 check_untyped_defs = true
@@ -142,25 +162,6 @@ testpaths = [
     "tests"
 ]
 
-[tool.ruff.flake8-annotations]
-suppress-dummy-args = true
-
-[tool.ruff.per-file-ignores]
-"examples/*" = [
-    "ERA001",  # commented-out-code
-    "INP"  # implicit-namespace-package
-]
-"tests/*" = [
-    "ANN",
-    "ARG002",  # unused-method-argument
-    "INP",  # implicit-namespace-package
-    "PLR0913",  # too-many-arguments
-    "S101",  # assert
-    "SLF001"  # private-member-access
-]
-
-[tool.ruff.pylint]
-max-args = 5
 
 [tool.setuptools.dynamic]
 version = {attr = "latexplotlib._version.__version__"}
