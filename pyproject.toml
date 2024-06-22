@@ -166,6 +166,8 @@ testpaths = [
 ]
 xfail_strict = true
 
+[tool.ruff]
+src = ["src"]
 
 [tool.setuptools.dynamic]
 version = {attr = "latexplotlib._version.__version__"}
