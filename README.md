@@ -5,8 +5,7 @@
 [![image](https://img.shields.io/pypi/pyversions/latexplotlib.svg)](https://pypi.python.org/pypi/latexplotlib)
 [![Actions status](https://github.com/cgahr/latexplotlib/actions/workflows/main.yml/badge.svg)](https://github.com/cgahr/latexplotlib/actions)
 [![Coverage Status](https://coveralls.io/repos/github/cgahr/latexplotlib/badge.svg?branch=main)](https://coveralls.io/github/cgahr/latexplotlib?branch=main)
-[![Code style: Ruff](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/astral-sh/ruff/main/assets/badge/format.json)](https://github.com/astral-sh/ruff)
-[![Ruff](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/charliermarsh/ruff/main/assets/badge/v1.json)](https://github.com/charliermarsh/ruff)
+[![Ruff](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/astral-sh/ruff/main/assets/badge/v2.json)](https://github.com/astral-sh/ruff)
 
 Perfect matplotlib figures for latex.
 
