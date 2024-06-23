@@ -33,3 +33,8 @@ This release exports all functions in `matplotlib.pyplot` to `latexplotlib`. Thi
     - add mypy-lsp config
 - fix previously unnoticed ruff errors
 - update badges
+
+## Version 0.9.0
+
+- deprecated python 3.8 support
+- deprecate `fraction` and `ratio` argument of `lpl.subplots`
