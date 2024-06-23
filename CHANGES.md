@@ -20,3 +20,16 @@ This release exports all functions in `matplotlib.pyplot` to `latexplotlib`. Thi
 - support for python 3.12
 - deprecate python 3.7 support
 - decrease all font sizes by 2. With the previous style, the labels where far to big compared to the surrounding text.
+
+## Version 0.8.1
+
+- improve docstring of `lpl.suplots`
+- improve logic of `lpl.subplots`
+- improve tooling:
+    - add yaml formatting to pre-commit
+    - add other minor pre-commit hooks
+    - fix ruff config
+    - add dependabot for github workflows
+    - add mypy-lsp config
+- fix previously unnoticed ruff errors
+- update badges
