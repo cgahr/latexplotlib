@@ -85,6 +85,22 @@ module = [
     "matplotlib.*"
 ]
 
+[tool.pylsp-mypy]
+enabled = true
+exclude = [
+    ".cache",
+    ".git",
+    ".ipynb_checkpoints",
+    "__pycache__",
+    "build",
+    "dist",
+    "examples",
+    "setup*",
+    "tests"
+]
+live_mode = true
+strict = true
+
 [tool.pytest.ini_options]
 addopts = ["--cov", "--cov-report=html", "--cov-report=term", "--strict-config", "--strict-markers", "-ra"]
 filterwarnings = ["error", "default::DeprecationWarning"]
