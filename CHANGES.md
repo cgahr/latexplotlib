@@ -47,6 +47,11 @@ This release exports all functions in `matplotlib.pyplot` to `latexplotlib`. Thi
 
 - bugfix: fix bug introduced in 0.8.1, where 'width_ratios' and 'height_ratios' were silently overwritten
 
-## Version 0.X.X
 
+## Version 0.9.0
+
+- deprecated python 3.8 support
+- deprecate `fraction` and `ratio` argument of `lpl.subplots`
+
+### Development
 - add tests for bugfix introduced in 0.8.3
