@@ -147,8 +147,6 @@ def subplots(  # noqa: PLR0913
     ncols: int = 1,
     *,
     scale: float = 1.0,
-    ratio: Any = None,  # noqa: ANN401
-    fraction: Any = None,  # noqa: ANN401
     aspect: Union[float, Literal["auto", "equal"]] = GOLDEN_RATIO,
     sharex: Union[bool, Literal["none", "all", "row", "col"]] = False,
     sharey: Union[bool, Literal["none", "all", "row", "col"]] = False,
@@ -274,22 +272,6 @@ def subplots(  # noqa: PLR0913
         fig_kw.pop("figsize")
         warnings.warn(
             "keyword 'figsize' is ignored and its value discarded.", stacklevel=2
-        )
-
-    if ratio is not None:
-        warnings.warn(
-            "the keyword argument 'ratio' is deprecated and will removed in the "
-            "future. Use 'aspect' instead.",
-            DeprecationWarning,
-            stacklevel=2,
-        )
-
-    if fraction is not None:
-        warnings.warn(
-            "the keyword argument 'fraction' is deprecated and will be removed in the "
-            "future. Use 'scale' instead.",
-            DeprecationWarning,
-            stacklevel=2,
         )
 
     gridspec_kw = fig_kw.get("gridspec_kw") or {}
