@@ -37,3 +37,8 @@ This release exports all functions in `matplotlib.pyplot` to `latexplotlib`. Thi
 ## Version 0.x.x
 
 - update `lpl.subplots` docstring
+
+## Version 0.9.0
+
+- deprecated python 3.8 support
+- deprecate `fraction` and `ratio` argument of `lpl.subplots`
