@@ -2,6 +2,8 @@ import warnings
 from typing import (
     TYPE_CHECKING,
     Any,
+    Dict,
+    Literal,
     Optional,
     Sequence,
     Tuple,
@@ -13,11 +15,9 @@ import matplotlib.pyplot as plt
 from ._config import size
 
 if TYPE_CHECKING:
-    from typing import Literal
-
-    Aspect = Union[float, Literal["auto", "equal"]]
+    from matplotlib.figure import Figure
 else:
-    Aspect = Union[float, str]
+    Figure = Any
 
 
 GOLDEN_RATIO: float = (5**0.5 + 1) / 2
@@ -80,7 +80,7 @@ def figsize(  # noqa: PLR0913
     ncols: int = 1,
     *,
     scale: float = 1.0,
-    aspect: Aspect = GOLDEN_RATIO,
+    aspect: Union[float, Literal["auto", "equal"]] = GOLDEN_RATIO,
     height_ratios: Optional[Sequence[float]] = None,
     width_ratios: Optional[Sequence[float]] = None,
 ) -> Tuple[float, float]:
@@ -144,44 +144,136 @@ def figsize(  # noqa: PLR0913
     )
 
 
-def subplots(
-    *args: int,
+def subplots(  # noqa: PLR0913
+    nrows: int = 1,
+    ncols: int = 1,
+    *,
     scale: float = 1.0,
-    aspect: Aspect = GOLDEN_RATIO,
     ratio: Any = None,  # noqa: ANN401
     fraction: Any = None,  # noqa: ANN401
-    **kwargs: Any,  # noqa: ANN401
-) -> Any:  # noqa: ANN401
-    """A wrapper for matplotlib's 'plt.subplots' method
+    aspect: Union[float, Literal["auto", "equal"]] = GOLDEN_RATIO,
+    sharex: Union[bool, Literal["none", "all", "row", "col"]] = False,
+    sharey: Union[bool, Literal["none", "all", "row", "col"]] = False,
+    squeeze: bool = True,
+    width_ratios: Optional[Sequence[float]] = None,
+    height_ratios: Optional[Sequence[float]] = None,
+    subplot_kw: Optional[Dict[str, Any]] = None,
+    gridspec_kw: Optional[Dict[str, Any]] = None,
+    **fig_kw: Any,  # noqa: ANN401
+) -> Tuple[Figure, Any]:
+    """
+    Create a figure and a set of subplots.
 
-    This function wraps 'plt.subplots'
+    This utility wrapper makes it convenient to create common layouts of
+    subplots, including the enclosing figure object, in a single call.
 
     Parameters
     ----------
-    *args
-        see help(plt.subplots)
+    nrows, ncols : int, default: 1
+        Number of rows/columns of the subplot grid.
+
     scale : float, optional
         The scale of of horizontal or vertical space to be used for the figure. For
         values larger then 1.0, the figure is to large to fit on the latex page without
         scaling it.
+
     aspect : float, optional
         The aspect of figure width to figure height for each individual axis element.
         Defaults to the golden aspect.
-    **kwargs
-        see help(plt.subplots)
+
+    sharex, sharey : bool or {'none', 'all', 'row', 'col'}, default: False
+        Controls sharing of properties among x (*sharex*) or y (*sharey*)
+        axes:
+
+        - True or 'all': x- or y-axis will be shared among all subplots.
+        - False or 'none': each subplot x- or y-axis will be independent.
+        - 'row': each subplot row will share an x- or y-axis.
+        - 'col': each subplot column will share an x- or y-axis.
+
+        When subplots have a shared x-axis along a column, only the x tick
+        labels of the bottom subplot are created. Similarly, when subplots
+        have a shared y-axis along a row, only the y tick labels of the first
+        column subplot are created. To later turn other subplots' ticklabels
+        on, use `~matplotlib.axes.Axes.tick_params`.
+
+        When subplots have a shared axis that has units, calling
+        `~matplotlib.axis.Axis.set_units` will update each axis with the
+        new units.
+
+    squeeze : bool, default: True
+        - If True, extra dimensions are squeezed out from the returned
+          array of `~matplotlib.axes.Axes`:
+
+          - if only one subplot is constructed (nrows=ncols=1), the
+            resulting single Axes object is returned as a scalar.
+          - for Nx1 or 1xM subplots, the returned object is a 1D numpy
+            object array of Axes objects.
+          - for NxM, subplots with N>1 and M>1 are returned as a 2D array.
+
+        - If False, no squeezing at all is done: the returned Axes object is
+          always a 2D array containing Axes instances, even if it ends up
+          being 1x1.
+
+    width_ratios : array-like of length *ncols*, optional
+        Defines the relative widths of the columns. Each column gets a
+        relative width of ``width_ratios[i] / sum(width_ratios)``.
+        If not given, all columns will have the same width.  Equivalent
+        to ``gridspec_kw={'width_ratios': [...]}``.
+
+    height_ratios : array-like of length *nrows*, optional
+        Defines the relative heights of the rows. Each row gets a
+        relative height of ``height_ratios[i] / sum(height_ratios)``.
+        If not given, all rows will have the same height. Convenience
+        for ``gridspec_kw={'height_ratios': [...]}``.
+
+    subplot_kw : dict, optional
+        Dict with keywords passed to the
+        `~matplotlib.figure.Figure.add_subplot` call used to create each
+        subplot.
+
+    gridspec_kw : dict, optional
+        Dict with keywords passed to the `~matplotlib.gridspec.GridSpec`
+        constructor used to create the grid the subplots are placed on.
+
+    **fig_kw
+        All additional keyword arguments are passed to the
+        `.pyplot.figure` call.
 
     Returns
     -------
-    Tuple[Figure, axes.Axes or array of Axes]
-        see help(plt.subplots)
+    fig : `.Figure`
 
-    References
-    ----------
-    - https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.subplots.html
-    - https://jwalton.info/Embed-Publication-Matplotlib-Latex/
+    ax : `~matplotlib.axes.Axes` or array of Axes
+        *ax* can be either a single `~.axes.Axes` object, or an array of Axes
+        objects if more than one subplot was created.  The dimensions of the
+        resulting array can be controlled with the squeeze keyword, see above.
+
+        Typical idioms for handling the return value are::
+
+            # using the variable ax for single a Axes
+            fig, ax = plt.subplots()
+
+            # using the variable axs for multiple Axes
+            fig, axs = plt.subplots(2, 2)
+
+            # using tuple unpacking for multiple Axes
+            fig, (ax1, ax2) = plt.subplots(1, 2)
+            fig, ((ax1, ax2), (ax3, ax4)) = plt.subplots(2, 2)
+
+        The names ``ax`` and pluralized ``axs`` are preferred over ``axes``
+        because for the latter it's not clear if it refers to a single
+        `~.axes.Axes` instance or a collection of these.
+
+    See Also
+    --------
+    .pyplot.figure
+    .pyplot.subplot
+    .pyplot.axes
+    .Figure.subplots
+    .Figure.add_subplot
     """
-    if "figsize" in kwargs:
-        kwargs.pop("figsize")
+    if "figsize" in fig_kw:
+        fig_kw.pop("figsize")
         warnings.warn(
             "keyword 'figsize' is ignored and its value discarded.", stacklevel=2
         )
@@ -202,19 +294,9 @@ def subplots(
             stacklevel=2,
         )
 
-    if "nrows" in kwargs:
-        nrows = kwargs.pop("nrows")
-        ncols = kwargs.pop("ncols")
-    elif "ncols" in kwargs:
-        nrows = args[0]
-        ncols = kwargs.pop("ncols")
-    else:
-        nrows = args[0]
-        ncols = args[1]
-
-    gridspec_kw = kwargs.get("gridspec_kw") or {}
-    width_ratios = kwargs.get("width_ratios") or gridspec_kw.get("width_ratios")
-    height_ratios = kwargs.get("height_ratios") or gridspec_kw.get("height_ratios")
+    gridspec_kw = fig_kw.get("gridspec_kw") or {}
+    width_ratios = fig_kw.get("width_ratios") or gridspec_kw.get("width_ratios")
+    height_ratios = fig_kw.get("height_ratios") or gridspec_kw.get("height_ratios")
 
     _figsize = figsize(
         nrows,
@@ -225,4 +307,16 @@ def subplots(
         height_ratios=height_ratios,
     )
 
-    return plt.subplots(nrows, ncols, figsize=_figsize, **kwargs)
+    return plt.subplots(  # type: ignore[no-any-return]
+        nrows=nrows,
+        ncols=ncols,
+        sharex=sharex,
+        sharey=sharey,
+        squeeze=squeeze,
+        subplot_kw=subplot_kw,
+        gridspec_kw=gridspec_kw,
+        height_ratios=height_ratios,
+        width_ratios=width_ratios,
+        figsize=_figsize,
+        **fig_kw,
+    )
