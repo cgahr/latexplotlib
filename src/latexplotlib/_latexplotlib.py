@@ -5,7 +5,6 @@ from typing import (
     Any,
     Literal,
     Optional,
-    Tuple,
     Union,
 )
 
@@ -82,7 +81,7 @@ def figsize(  # noqa: PLR0913
     aspect: Union[float, Literal["auto", "equal"]] = GOLDEN_RATIO,
     height_ratios: Optional[Sequence[float]] = None,
     width_ratios: Optional[Sequence[float]] = None,
-) -> Tuple[float, float]:
+) -> tuple[float, float]:
     """Computes the optimal figsize.
 
     This function computes width and height (in inches) such that a figure using this
