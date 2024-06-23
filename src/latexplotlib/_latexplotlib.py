@@ -149,8 +149,6 @@ def subplots(  # noqa: PLR0913
     height_ratios: Optional[Sequence[float]] = None,
     subplot_kw: Optional[dict[str, Any]] = None,
     gridspec_kw: Optional[dict[str, Any]] = None,
-    ratio: Any = None,  # noqa: ANN401
-    fraction: Any = None,  # noqa: ANN401
     **fig_kw: Any,  # noqa: ANN401
 ) -> tuple[Figure, Any]:
     """
@@ -273,22 +271,6 @@ def subplots(  # noqa: PLR0913
         fig_kw.pop("figsize")
         warnings.warn(
             "keyword 'figsize' is ignored and its value discarded.", stacklevel=2
-        )
-
-    if ratio is not None:
-        warnings.warn(
-            "the keyword argument 'ratio' is deprecated and will removed in the "
-            "future. Use 'aspect' instead.",
-            DeprecationWarning,
-            stacklevel=2,
-        )
-
-    if fraction is not None:
-        warnings.warn(
-            "the keyword argument 'fraction' is deprecated and will be removed in the "
-            "future. Use 'scale' instead.",
-            DeprecationWarning,
-            stacklevel=2,
         )
 
     gridspec_kw = dict(gridspec_kw or {})
