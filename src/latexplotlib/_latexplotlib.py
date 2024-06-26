@@ -172,14 +172,19 @@ def subplots(  # noqa: PLR0913
     nrows, ncols : int, default: 1
         Number of rows/columns of the subplot grid.
 
-    scale : float, optional
-        The scale of of horizontal or vertical space to be used for the figure. For
-        values larger then 1.0, the figure is to large to fit on the latex page without
-        scaling it.
+    scale : float, default: 1.0
+        The scale of the figure relative to the available space. For values larger then
+        1.0, the figure extends beyond the bounds of the latex page.
 
-    aspect : float, optional
-        The aspect of figure width to figure height for each individual axis element.
-        Defaults to the golden aspect.
+    aspect : float or {'auto', 'equal'}, default: golden ratio
+        The aspect ratio of figure width to figure height for each individual axis
+        element:
+
+        - float: aspect ratio between figure width and figure height.
+        - 'equal': equivalent to 'ratio = 1'.
+        - 'auto': makes the figure as big as possible in the available space.
+
+        Defaults to the golden ratio.
 
     sharex, sharey : bool or {'none', 'all', 'row', 'col'}, default: False
         Controls sharing of properties among x (*sharex*) or y (*sharey*)
