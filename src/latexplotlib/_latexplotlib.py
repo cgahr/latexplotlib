@@ -149,8 +149,6 @@ def subplots(  # noqa: PLR0913
     ncols: int = 1,
     *,
     scale: float = 1.0,
-    ratio: Any = None,  # noqa: ANN401
-    fraction: Any = None,  # noqa: ANN401
     aspect: Union[float, Literal["auto", "equal"]] = GOLDEN_RATIO,
     sharex: Union[bool, Literal["none", "all", "row", "col"]] = False,
     sharey: Union[bool, Literal["none", "all", "row", "col"]] = False,
@@ -159,6 +157,8 @@ def subplots(  # noqa: PLR0913
     height_ratios: Optional[Sequence[float]] = None,
     subplot_kw: Optional[Dict[str, Any]] = None,
     gridspec_kw: Optional[Dict[str, Any]] = None,
+    ratio: Any = None,  # noqa: ANN401
+    fraction: Any = None,  # noqa: ANN401
     **fig_kw: Any,  # noqa: ANN401
 ) -> Tuple[Figure, Any]:
     """
