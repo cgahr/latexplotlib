@@ -33,3 +33,7 @@ This release exports all functions in `matplotlib.pyplot` to `latexplotlib`. Thi
     - add mypy-lsp config
 - fix previously unnoticed ruff errors
 - update badges
+
+## Version 0.x.x
+
+- update `lpl.subplots` docstring
