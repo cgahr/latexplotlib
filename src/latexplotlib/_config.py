@@ -1,7 +1,8 @@
 import json
+from collections.abc import Iterator, Mapping
 from contextlib import contextmanager
 from pathlib import Path
-from typing import Dict, Iterator, Mapping, Tuple, Union
+from typing import Union
 
 from appdirs import user_config_dir
 
@@ -12,7 +13,7 @@ _PURGED_OLD = "_purged_old_styles"
 CONFIGFILE: str = "config.ini"
 CONFIGDIR: Path = Path(user_config_dir(NAME))
 CONFIGPATH: Path = CONFIGDIR / CONFIGFILE
-DEFAULT_CONFIG: Dict[str, int] = {"width": 630, "height": 412, _PURGED_OLD: False}
+DEFAULT_CONFIG: dict[str, int] = {"width": 630, "height": 412, _PURGED_OLD: False}
 
 
 ConfigData = Union[int, bool]
@@ -27,9 +28,9 @@ class Config:
 
         self._config = self._open(path)
 
-    def _open(self, path: Path) -> Dict[str, ConfigData]:
+    def _open(self, path: Path) -> dict[str, ConfigData]:
         with path.open(encoding="utf-8") as fh:
-            config: Dict[str, ConfigData] = json.load(fh)
+            config: dict[str, ConfigData] = json.load(fh)
         return config
 
     def _write(self, cfg: Mapping[str, ConfigData]) -> None:
@@ -70,7 +71,7 @@ class Size:
         config.reload()
         self._width, self._height = config["width"], config["height"]
 
-    def get(self) -> Tuple[int, int]:
+    def get(self) -> tuple[int, int]:
         """Returns the current size of the figure in pts.
 
         Returns

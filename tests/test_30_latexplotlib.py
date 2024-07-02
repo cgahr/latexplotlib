@@ -125,11 +125,11 @@ class TestSubplots:
         lpl.subplots(2, 3)
 
     def test_deprecates_ratio(self):
-        with pytest.warns(DeprecationWarning):
+        with pytest.raises(AttributeError):
             lpl.subplots(1, 1, ratio=1)
 
     def test_deprecates_fraction(self):
-        with pytest.warns(DeprecationWarning):
+        with pytest.raises(AttributeError):
             lpl.subplots(1, 1, fraction=1)
 
     def test_warns_if_figsize_used(self):
