@@ -34,7 +34,7 @@ This release exports all functions in `matplotlib.pyplot` to `latexplotlib`. Thi
 - fix previously unnoticed ruff errors
 - update badges
 
-## Version 0.x.x
+## Version 0.8.2
 
 - update `lpl.subplots` docstring
 - typing: allow both floats and ints as widths and height
