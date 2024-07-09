@@ -5,6 +5,9 @@ from typing import Dict, Iterator, Mapping, Tuple, Union
 
 from appdirs import user_config_dir
 
+Number = Union[int, float]
+ConfigData = Union[Number, bool]
+
 GOLDEN_RATIO: float = (5**0.5 + 1) / 2
 NAME: str = "latexplotlib"
 _PURGED_OLD = "_purged_old_styles"
@@ -12,10 +15,7 @@ _PURGED_OLD = "_purged_old_styles"
 CONFIGFILE: str = "config.ini"
 CONFIGDIR: Path = Path(user_config_dir(NAME))
 CONFIGPATH: Path = CONFIGDIR / CONFIGFILE
-DEFAULT_CONFIG: Dict[str, int] = {"width": 630, "height": 412, _PURGED_OLD: False}
-
-
-ConfigData = Union[int, bool]
+DEFAULT_CONFIG: Dict[str, Number] = {"width": 630, "height": 412, _PURGED_OLD: False}
 
 
 class Config:
@@ -60,8 +60,8 @@ config = Config(CONFIGPATH)
 
 
 class Size:
-    _width: int
-    _height: int
+    _width: Number
+    _height: Number
 
     def __init__(self) -> None:
         self._width, self._height = config["width"], config["height"]
@@ -70,7 +70,7 @@ class Size:
         config.reload()
         self._width, self._height = config["width"], config["height"]
 
-    def get(self) -> Tuple[int, int]:
+    def get(self) -> Tuple[Number, Number]:
         """Returns the current size of the figure in pts.
 
         Returns
@@ -80,7 +80,7 @@ class Size:
         """
         return self._width, self._height
 
-    def set(self, width: int, height: int) -> None:
+    def set(self, width: Number, height: Number) -> None:
         """Sets the size of the latex page in pts.
 
         You can find the size of the latex page with the following commands:
@@ -99,7 +99,7 @@ class Size:
         self._width, self._height = width, height
 
     @contextmanager
-    def context(self, width: int, height: int) -> Iterator[None]:
+    def context(self, width: Number, height: Number) -> Iterator[None]:
         """This context manager temporarily sets the size of the figure in pts.
 
         Parameters
