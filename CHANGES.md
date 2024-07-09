@@ -37,3 +37,4 @@ This release exports all functions in `matplotlib.pyplot` to `latexplotlib`. Thi
 ## Version 0.x.x
 
 - update `lpl.subplots` docstring
+- remove unused packages from environment.yml
