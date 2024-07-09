@@ -11,8 +11,6 @@ ConfigData = Union[Number, bool]
 
 GOLDEN_RATIO: float = (5**0.5 + 1) / 2
 NAME: str = "latexplotlib"
-_PURGED_OLD = "_purged_old_styles"
-
 CONFIGFILE: str = "config.ini"
 CONFIGDIR: Path = Path(user_config_dir(NAME))
 CONFIGPATH: Path = CONFIGDIR / CONFIGFILE
