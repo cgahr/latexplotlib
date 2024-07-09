@@ -1,10 +1,17 @@
 import json
-from collections.abc import Iterator, Mapping
+import sys
+import warnings
+from collections.abc import Iterator
 from contextlib import contextmanager
 from pathlib import Path
 from typing import Union
 
 from appdirs import user_config_dir
+
+if sys.version_info >= (3, 11):
+    import tomllib
+else:
+    import tomli as tomllib
 
 Number = Union[int, float]
 ConfigData = Union[Number, bool]
@@ -14,60 +21,59 @@ NAME: str = "latexplotlib"
 CONFIGFILE: str = "config.ini"
 CONFIGDIR: Path = Path(user_config_dir(NAME))
 CONFIGPATH: Path = CONFIGDIR / CONFIGFILE
-DEFAULT_CONFIG: dict[str, Number] = {"width": 630, "height": 412, _PURGED_OLD: False}
+DEFAULT_WIDTH = 630
+DEFAULT_HEIGHT = 412
 
 
-class Config:
-    def __init__(self, path: Path) -> None:
-        self.path = path
+def find_pyproject_toml() -> Path:
+    pyproject = "pyproject.toml"
+    path = Path().absolute()
+    while path != Path("/"):
+        if (path / pyproject).exists():
+            return path / pyproject
+        path = path.parent
 
-        if not self.path.exists():
-            self.reset()
-
-        self._config = self._open(path)
-
-    def _open(self, path: Path) -> dict[str, ConfigData]:
-        with path.open(encoding="utf-8") as fh:
-            config: dict[str, ConfigData] = json.load(fh)
-        return config
-
-    def _write(self, cfg: Mapping[str, ConfigData]) -> None:
-        if not self.path.parent.exists():
-            self.path.parent.mkdir(parents=True)
-
-        with self.path.open("w", encoding="utf-8") as fh:
-            json.dump(cfg, fh, indent=4)
-
-    def reset(self) -> None:
-        if self.path.exists():
-            self.path.unlink()
-
-        self._write(DEFAULT_CONFIG)
-
-    def reload(self) -> None:
-        self._config = self._open(self.path)
-
-    def __getitem__(self, name: str) -> ConfigData:
-        return self._config.get(name, DEFAULT_CONFIG[name])
-
-    def __setitem__(self, name: str, value: ConfigData) -> None:
-        self._config[name] = value
-        self._write(self._config)
+    msg = "Could not find 'pyproject.toml'"
+    raise FileNotFoundError(msg)
 
 
-config = Config(CONFIGPATH)
+def find_config_ini() -> Path:
+    if CONFIGPATH.exists():
+        return CONFIGPATH
+
+    msg = f"No such file: '{CONFIGPATH}'"
+    raise FileNotFoundError(msg)
 
 
 class Size:
     _width: Number
     _height: Number
 
-    def __init__(self) -> None:
-        self._width, self._height = config["width"], config["height"]
+    def __init__(self, width: Number, height: Number) -> None:
+        self._width, self._height = width, height
 
-    def reload(self) -> None:
-        config.reload()
-        self._width, self._height = config["width"], config["height"]
+    @classmethod
+    def from_pyproject_toml(cls, path: Path) -> "Size":
+        with path.open("rb") as fh:
+            cfg = tomllib.load(fh)
+
+        config = cfg["tool"].get("latexplotlib", {})
+
+        if config == {}:
+            return cls(DEFAULT_WIDTH, DEFAULT_HEIGHT)
+
+        return cls(
+            config.get("width", DEFAULT_WIDTH), config.get("height", DEFAULT_HEIGHT)
+        )
+
+    @classmethod
+    def from_config_ini(cls, path: Path) -> "Size":
+        with path.open(encoding="utf-8") as fh:
+            config: dict[str, Number] = json.load(fh)
+
+        return cls(
+            config.get("width", DEFAULT_WIDTH), config.get("height", DEFAULT_HEIGHT)
+        )
 
     def get(self) -> tuple[Number, Number]:
         """Returns the current size of the figure in pts.
@@ -94,7 +100,6 @@ class Size:
         height : int
             The height of the latex page in pts.
         """
-        config["width"], config["height"] = width, height
         self._width, self._height = width, height
 
     @contextmanager
@@ -121,4 +126,20 @@ class Size:
         return str(f"{self._width}pt, {self._height}pt")
 
 
-size = Size()
+try:
+    path = find_pyproject_toml()
+    size = Size.from_pyproject_toml(path)
+except FileNotFoundError:
+    try:
+        path = find_config_ini()
+
+        msg = f"""
+            Configuring latexplotlib via {CONFIGPATH} is being deprecated. Please use
+            the [tool.latexplotlib] section of the 'pyproject.toml' file instead.
+
+            To silence this warning, please delete the config file {CONFIGPATH}
+        """
+        warnings.warn(msg, DeprecationWarning, stacklevel=2)
+        size = Size.from_config_ini(path)
+    except FileNotFoundError:
+        size = Size(DEFAULT_WIDTH, DEFAULT_HEIGHT)
