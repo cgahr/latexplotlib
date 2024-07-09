@@ -1,6 +1,10 @@
 [build-system]
 build-backend = "setuptools.build_meta"
-requires = ["matplotlib", "setuptools"]
+requires = [
+    "matplotlib",
+    "setuptools",
+    "tomli; python_version < '3.11'"
+]
 
 [project]
 authors = [
