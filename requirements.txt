@@ -1,0 +1,7 @@
+--editable .[tests]
+ipykernel
+numpy
+pre-commit
+pylsp-mypy
+python-lsp-server
+ruff
