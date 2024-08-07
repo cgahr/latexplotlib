@@ -299,17 +299,31 @@ def subplots(  # noqa: PLR0913
             stacklevel=2,
         )
 
-    gridspec_kw = fig_kw.get("gridspec_kw") or {}
-    width_ratios = fig_kw.get("width_ratios") or gridspec_kw.get("width_ratios")
-    height_ratios = fig_kw.get("height_ratios") or gridspec_kw.get("height_ratios")
+    gridspec_kw = dict(gridspec_kw or {})
+    if height_ratios is not None:
+        if "height_ratios" in gridspec_kw:
+            msg = (
+                "'height_ratios' must not be defined both as "
+                "parameter and as key in 'gridspec_kw'"
+            )
+            raise ValueError(msg)
+        gridspec_kw["height_ratios"] = height_ratios
+    if width_ratios is not None:
+        if "width_ratios" in gridspec_kw:
+            msg = (
+                "'width_ratios' must not be defined both as "
+                "parameter and as key in 'gridspec_kw'"
+            )
+            raise ValueError(msg)
+        gridspec_kw["width_ratios"] = width_ratios
 
     _figsize = figsize(
         nrows,
         ncols,
         scale=scale,
         aspect=aspect,
-        width_ratios=width_ratios,
-        height_ratios=height_ratios,
+        width_ratios=gridspec_kw.get("width_ratios"),
+        height_ratios=gridspec_kw.get("height_ratios"),
     )
 
     return plt.subplots(  # type: ignore[no-any-return]
@@ -320,8 +334,6 @@ def subplots(  # noqa: PLR0913
         squeeze=squeeze,
         subplot_kw=subplot_kw,
         gridspec_kw=gridspec_kw,
-        height_ratios=height_ratios,
-        width_ratios=width_ratios,
         figsize=_figsize,
         **fig_kw,
     )
