@@ -42,3 +42,7 @@ This release exports all functions in `matplotlib.pyplot` to `latexplotlib`. Thi
 ### Development
 - remove unused packages from environment.yml
 - add requirements.txt
+
+## Version 0.8.3
+
+- bugfix: fix bug introduced in 0.8.1, where 'width_ratios' and 'height_ratios' were silently overwritten
