@@ -18,7 +18,7 @@ def test_styles():
 
 
 class TestPurgeOldStyles:
-    @pytest.fixture()
+    @pytest.fixture
     def purged_str(self, monkeypatch):
         s = "banana"
         monkeypatch.setattr(cleanup, "_PURGED_OLD", s)
@@ -35,25 +35,25 @@ class TestPurgeOldStyles:
         self.assert_purged_true = fun
         return default
 
-    @pytest.fixture()
+    @pytest.fixture
     def styles_folder(self, monkeypatch):
         styles_folder = "new"
         monkeypatch.setattr(cleanup, "STYLES_FOLDER", styles_folder)
         return styles_folder
 
-    @pytest.fixture()
+    @pytest.fixture
     def new(self, tmp_path, styles_folder):
         path = tmp_path / styles_folder
         path.mkdir()
         return path
 
-    @pytest.fixture()
+    @pytest.fixture
     def stylelib(self, monkeypatch):
         stylelib = "old"
         monkeypatch.setattr(cleanup, "STYLELIB", stylelib)
         return stylelib
 
-    @pytest.fixture()
+    @pytest.fixture
     def old(self, tmp_path, stylelib):
         path = tmp_path / stylelib
         path.mkdir()

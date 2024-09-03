@@ -45,11 +45,11 @@ class TestFigsize:
     def scale(self, request):
         return request.param
 
-    @pytest.fixture()
+    @pytest.fixture
     def width(self):
         return 400
 
-    @pytest.fixture()
+    @pytest.fixture
     def height(self):
         return 300
 
@@ -79,7 +79,7 @@ class TestFigsize:
         assert res_width <= width_in * max(scale, 1)
         assert res_height <= height_in * max(scale, 1)
 
-    @pytest.fixture()
+    @pytest.fixture
     def small_enough(self):
         return 0.07
 
@@ -112,7 +112,7 @@ class TestFigsize:
 
 
 class TestSubplots:
-    @pytest.fixture()
+    @pytest.fixture
     def _set_size(self, monkeypatch, mocker):
         size = mocker.MagicMock()
         size.get = mocker.MagicMock(return_value=(400, 300))

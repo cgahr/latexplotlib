@@ -12,7 +12,7 @@ def _close_plots():
     plt.close("all")
 
 
-@pytest.fixture()
+@pytest.fixture
 def _show(pytestconfig):
     yield
     if pytestconfig.getoption("plot"):

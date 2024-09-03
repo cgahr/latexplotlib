@@ -21,26 +21,26 @@ def test_constants():
 
 
 class TestConfig:
-    @pytest.fixture()
+    @pytest.fixture
     def default(self, monkeypatch):
         default = {"apple": 10, "egg": 1, "skyscraper": "a"}
         monkeypatch.setattr(cfg, "DEFAULT_CONFIG", default)
         return default
 
-    @pytest.fixture()
+    @pytest.fixture
     def path(self, tmp_path, monkeypatch):
         path = tmp_path / "directory" / "dir2" / "tmp.ini"
         path.parent.mkdir(parents=True)
         return path
 
-    @pytest.fixture()
+    @pytest.fixture
     def config(self, default, path):
         with path.open("w", encoding="utf-8") as fh:
             json.dump(default, fh)
 
         return cfg.Config(path)
 
-    @pytest.fixture()
+    @pytest.fixture
     def mock_open(self, default, mocker):
         return mocker.patch("latexplotlib._config.Config._open", return_value=default)
 
@@ -142,11 +142,11 @@ def test_config_path():
 
 
 class TestSize:
-    @pytest.fixture()
+    @pytest.fixture
     def height(self):
         return 20
 
-    @pytest.fixture()
+    @pytest.fixture
     def width(self):
         return 10
 
@@ -158,7 +158,7 @@ class TestSize:
         )
         monkeypatch.setattr(cfg, "config", config)
 
-    @pytest.fixture()
+    @pytest.fixture
     def size(self):
         return cfg.Size()
 
