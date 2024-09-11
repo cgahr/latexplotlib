@@ -43,9 +43,12 @@
               ++ (with pkgs; [
                 ruff
                 pre-commit
+                rustc # for pre-commit ruff
+                cargo # for pre-commit ruff
               ]);
             shellHook = ''
               export PYTHONPATH="$(pwd)/src"
+              export PIP_NO_BINARY="ruff"
             '';
           };
       }
