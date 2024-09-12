@@ -46,3 +46,7 @@ This release exports all functions in `matplotlib.pyplot` to `latexplotlib`. Thi
 ## Version 0.8.3
 
 - bugfix: fix bug introduced in 0.8.1, where 'width_ratios' and 'height_ratios' were silently overwritten
+
+## Version 0.X.X
+
+- add tests for bugfix introduced in 0.8.3

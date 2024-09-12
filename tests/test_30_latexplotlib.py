@@ -148,6 +148,34 @@ class TestSubplots:
             width_ratios=[0.25, 1.0, 0.25],
         )
 
+    @pytest.mark.skipif(
+        mpl.__version_info__ < (3, 6), reason="requires matplotlib 3.6.0 or higher"
+    )
+    def test_both_width_ratios(self):
+        msg = "must not be defined both as parameter and as key in 'gridspec_kw"
+        with pytest.raises(ValueError, match=msg):
+            lpl.subplots(
+                2,
+                3,
+                aspect="equal",
+                gridspec_kw={"width_ratios": []},
+                width_ratios=[0.25, 1.0, 0.25],
+            )
+
+    @pytest.mark.skipif(
+        mpl.__version_info__ < (3, 6), reason="requires matplotlib 3.6.0 or higher"
+    )
+    def test_both_height_ratios(self):
+        msg = "must not be defined both as parameter and as key in 'gridspec_kw"
+        with pytest.raises(ValueError, match=msg):
+            lpl.subplots(
+                2,
+                3,
+                aspect="equal",
+                gridspec_kw={"height_ratios": []},
+                height_ratios=[0.25, 1.0],
+            )
+
     @pytest.mark.usefixtures("_set_size", "_show")
     def test_plot(self):
         height_ratios = [0.25, 1.0]
