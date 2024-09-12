@@ -1,5 +1,4 @@
 ci:
-  skip: [pytest]
   autoupdate_schedule: monthly
   autoupdate_commit_msg: '[pre-commit.ci] pre-commit autoupdate'
 repos:
@@ -42,12 +41,4 @@ repos:
     hooks:
       - id: mypy
         exclude: tests
-  - repo: local
-    hooks:
-      - id: pytest
-        name: pytest
-        entry: pytest
-        language: python
-        pass_filenames: false
-        always_run: true
-fail_fast: true
+fail_fast: false
