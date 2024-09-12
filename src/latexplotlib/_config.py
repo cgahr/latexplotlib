@@ -19,7 +19,6 @@ CONFIGPATH: Path = CONFIGDIR / CONFIGFILE
 DEFAULT_CONFIG: dict[str, Number] = {"width": 630, "height": 412, _PURGED_OLD: False}
 
 
-
 class Config:
     def __init__(self, path: Path) -> None:
         self.path = path
