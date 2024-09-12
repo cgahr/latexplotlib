@@ -1,5 +1,4 @@
 ci:
-  skip: [pytest]
   autoupdate_schedule: monthly
   autoupdate_commit_msg: '[pre-commit.ci] pre-commit autoupdate'
 repos:
