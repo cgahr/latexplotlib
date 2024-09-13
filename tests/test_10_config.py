@@ -2,14 +2,51 @@ import pytest
 
 from latexplotlib import _config as cfg
 
-GOLDEN_RATIO = (5**0.5 + 1) / 2
-CONFIGFILE = "config.ini"
-NAME = "latexplotlib"
-
 
 def test_constants():
     assert cfg.DEFAULT_HEIGHT
     assert cfg.DEFAULT_WIDTH
+
+
+class TestFindPyprojectToml:
+    @pytest.fixture
+    def path(self, tmp_path, mocker):
+        path = tmp_path / "a" / "b" / "c"
+        path.mkdir(parents=True)
+
+        mocker.patch("latexplotlib._config.Path.absolute", return_value=path)
+        return path
+
+    def test_pyproject_exists(self, path):
+        path = path.parent.parent / "pyproject.toml"
+        path.touch()
+
+        cfg.find_pyproject_toml()
+
+    def test_pyproject_not_exists(self, path):
+        with pytest.raises(FileNotFoundError):
+            cfg.find_pyproject_toml()
+
+
+class TestFindConfigIni:
+    @pytest.fixture
+    def path(self, tmp_path, monkeypatch):
+        path = tmp_path / "a"
+        path.mkdir(parents=True)
+        path /= "config.123"
+
+        monkeypatch.setattr(cfg, "CONFIGPATH", path)
+        return path
+
+    def test_configini_exists(self, path):
+        path.touch()
+
+        with pytest.warns(DeprecationWarning):
+            cfg.find_config_ini()
+
+    def test_configini_not_exists(self, path):
+        with pytest.warns(DeprecationWarning), pytest.raises(FileNotFoundError):
+            cfg.find_config_ini()
 
 
 class TestSize:
