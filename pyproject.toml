@@ -48,7 +48,10 @@ Homepage = "https://github.com/cgahr/latexplotlib"
 Issues = "https://github.com/cgahr/latexplotlib/issues"
 
 [tool.coverage.report]
-exclude_lines = ["if TYPE_CHECKING:"]
+exclude_lines = [
+    "if TYPE_CHECKING:",
+    "import tomli as tomllib"  # tested via GitHub actions
+]
 
 [tool.coverage.run]
 source = ["src"]
