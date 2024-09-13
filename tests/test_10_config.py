@@ -84,3 +84,46 @@ class TestSize:
 
     def test_repr(self, size):
         repr(size)
+
+    def test_from_pyproject_toml_complete(self, tmp_path):
+        width = 123
+        height = 456
+        path = tmp_path / "pyproject.toml"
+        with path.open("w") as fh:
+            fh.writelines(
+                [
+                    "[tool.latexplotlib]\n",
+                    f"width = {width}\n",
+                    f"height = {height}\n",
+                ]
+            )
+
+        size = cfg.Size.from_pyproject_toml(path)
+        assert size._width == width
+        assert size._height == height
+
+    def test_from_pyproject_toml_empty(self, tmp_path):
+        path = tmp_path / "pyproject.toml"
+        path.touch()
+
+        size = cfg.Size.from_pyproject_toml(path)
+        assert size._width == cfg.DEFAULT_WIDTH
+        assert size._height == cfg.DEFAULT_HEIGHT
+
+    def test_from_pyproject_toml_tool(self, tmp_path):
+        path = tmp_path / "pyproject.toml"
+        with path.open("w") as fh:
+            fh.writelines(["[tool]\n"])
+
+        size = cfg.Size.from_pyproject_toml(path)
+        assert size._width == cfg.DEFAULT_WIDTH
+        assert size._height == cfg.DEFAULT_HEIGHT
+
+    def test_from_pyproject_toml_tool_latexplotlib(self, tmp_path):
+        path = tmp_path / "pyproject.toml"
+        with path.open("w") as fh:
+            fh.writelines(["[tool.latexplotlib]\n"])
+
+        size = cfg.Size.from_pyproject_toml(path)
+        assert size._width == cfg.DEFAULT_WIDTH
+        assert size._height == cfg.DEFAULT_HEIGHT
