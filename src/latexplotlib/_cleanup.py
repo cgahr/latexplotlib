@@ -1,6 +1,5 @@
 import filecmp
 from pathlib import Path
-from typing import List
 
 from matplotlib import get_configdir
 
@@ -20,7 +19,7 @@ STYLES = {
 STYLES_FOLDER = "styles"
 
 
-def purge_old_styles(path: List[str]) -> None:
+def purge_old_styles(path: list[str]) -> None:
     if config[_PURGED_OLD]:
         return
 

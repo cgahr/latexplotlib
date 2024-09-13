@@ -1,14 +1,6 @@
 import warnings
-from typing import (
-    TYPE_CHECKING,
-    Any,
-    Dict,
-    Literal,
-    Optional,
-    Sequence,
-    Tuple,
-    Union,
-)
+from collections.abc import Sequence
+from typing import TYPE_CHECKING, Any, Literal, Optional, Union
 
 import matplotlib.pyplot as plt
 
@@ -83,7 +75,7 @@ def figsize(  # noqa: PLR0913
     aspect: Union[float, Literal["auto", "equal"]] = GOLDEN_RATIO,
     height_ratios: Optional[Sequence[float]] = None,
     width_ratios: Optional[Sequence[float]] = None,
-) -> Tuple[float, float]:
+) -> tuple[float, float]:
     """Computes the optimal figsize.
 
     This function computes width and height (in inches) such that a figure using this
@@ -155,12 +147,10 @@ def subplots(  # noqa: PLR0913
     squeeze: bool = True,
     width_ratios: Optional[Sequence[float]] = None,
     height_ratios: Optional[Sequence[float]] = None,
-    subplot_kw: Optional[Dict[str, Any]] = None,
-    gridspec_kw: Optional[Dict[str, Any]] = None,
-    ratio: Any = None,  # noqa: ANN401
-    fraction: Any = None,  # noqa: ANN401
+    subplot_kw: Optional[dict[str, Any]] = None,
+    gridspec_kw: Optional[dict[str, Any]] = None,
     **fig_kw: Any,  # noqa: ANN401
-) -> Tuple[Figure, Any]:
+) -> tuple[Figure, Any]:
     """
     Create a figure and a set of subplots.
 
@@ -281,22 +271,6 @@ def subplots(  # noqa: PLR0913
         fig_kw.pop("figsize")
         warnings.warn(
             "keyword 'figsize' is ignored and its value discarded.", stacklevel=2
-        )
-
-    if ratio is not None:
-        warnings.warn(
-            "the keyword argument 'ratio' is deprecated and will removed in the "
-            "future. Use 'aspect' instead.",
-            DeprecationWarning,
-            stacklevel=2,
-        )
-
-    if fraction is not None:
-        warnings.warn(
-            "the keyword argument 'fraction' is deprecated and will be removed in the "
-            "future. Use 'scale' instead.",
-            DeprecationWarning,
-            stacklevel=2,
         )
 
     gridspec_kw = dict(gridspec_kw or {})
