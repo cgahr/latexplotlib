@@ -23,10 +23,10 @@ class TestSize:
 
     @pytest.fixture
     def size(self, width, height):
-        return cfg.Size(width, height)
+        return cfg.Size(width=width, height=height)
 
     def test___init__(self, width, height):
-        size = cfg.Size(width, height)
+        size = cfg.Size(width=width, height=height)
 
         assert size._width == width
         assert size._height == height

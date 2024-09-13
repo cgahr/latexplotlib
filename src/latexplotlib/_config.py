@@ -57,7 +57,7 @@ class Size:
     _width: Number
     _height: Number
 
-    def __init__(self, width: Number, height: Number) -> None:
+    def __init__(self, *, width: Number, height: Number) -> None:
         self._width, self._height = width, height
 
     @classmethod
@@ -65,13 +65,11 @@ class Size:
         with path.open("rb") as fh:
             cfg = tomllib.load(fh)
 
-        config = cfg["tool"].get("latexplotlib", {})
-
-        if config == {}:
-            return cls(DEFAULT_WIDTH, DEFAULT_HEIGHT)
+        config = cfg.get("tool", {}).get("latexplotlib", {})
 
         return cls(
-            config.get("width", DEFAULT_WIDTH), config.get("height", DEFAULT_HEIGHT)
+            width=config.get("width", DEFAULT_WIDTH),
+            height=config.get("height", DEFAULT_HEIGHT),
         )
 
     @classmethod
@@ -80,7 +78,8 @@ class Size:
             config: dict[str, Number] = json.load(fh)
 
         return cls(
-            config.get("width", DEFAULT_WIDTH), config.get("height", DEFAULT_HEIGHT)
+            width=config.get("width", DEFAULT_WIDTH),
+            height=config.get("height", DEFAULT_HEIGHT),
         )
 
     def get(self) -> tuple[Number, Number]:
@@ -143,4 +142,4 @@ except FileNotFoundError:
 
         size = Size.from_config_ini(path)
     except FileNotFoundError:
-        size = Size(DEFAULT_WIDTH, DEFAULT_HEIGHT)
+        size = Size(width=DEFAULT_WIDTH, height=DEFAULT_HEIGHT)
