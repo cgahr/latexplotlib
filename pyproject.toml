@@ -183,6 +183,7 @@ suppress-dummy-args = true
     "ARG002",  # unused-method-argument
     "INP",  # implicit-namespace-package
     "PLR0913",  # too-many-arguments
+    "PLR6301",
     "S101",  # assert
     "SLF001"  # private-member-access
 ]
