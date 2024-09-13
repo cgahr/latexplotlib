@@ -38,6 +38,14 @@ def find_pyproject_toml() -> Path:
 
 
 def find_config_ini() -> Path:
+    msg = f"""
+        Configuring latexplotlib via {CONFIGPATH} is being deprecated. Please use
+        the [tool.latexplotlib] section of the 'pyproject.toml' file instead.
+
+        To silence this warning, please delete the config file {CONFIGPATH}
+    """
+    warnings.warn(msg, DeprecationWarning, stacklevel=2)
+
     if CONFIGPATH.exists():
         return CONFIGPATH
 
@@ -133,13 +141,6 @@ except FileNotFoundError:
     try:
         path = find_config_ini()
 
-        msg = f"""
-            Configuring latexplotlib via {CONFIGPATH} is being deprecated. Please use
-            the [tool.latexplotlib] section of the 'pyproject.toml' file instead.
-
-            To silence this warning, please delete the config file {CONFIGPATH}
-        """
-        warnings.warn(msg, DeprecationWarning, stacklevel=2)
         size = Size.from_config_ini(path)
     except FileNotFoundError:
         size = Size(DEFAULT_WIDTH, DEFAULT_HEIGHT)
