@@ -1,10 +1,6 @@
 [build-system]
 build-backend = "setuptools.build_meta"
-requires = [
-    "matplotlib",
-    "setuptools",
-    "tomli; python_version < '3.11'"
-]
+requires = ["setuptools"]
 
 [project]
 authors = [
@@ -21,7 +17,8 @@ classifiers = [
 ]
 dependencies = [
     "appdirs",
-    "matplotlib"
+    "matplotlib",
+    "tomli; python_version < '3.11'"
 ]
 description = "Perfect matplotlib figures for latex"
 dynamic = ["version"]
