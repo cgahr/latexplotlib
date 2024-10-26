@@ -25,7 +25,7 @@ DEFAULT_WIDTH = 630
 DEFAULT_HEIGHT = 412
 
 
-def find_pyproject_toml() -> Path:
+def find_pyproject_toml() -> Path | None:
     pyproject = "pyproject.toml"
     path = Path().absolute()
     while path != Path("/"):
@@ -33,24 +33,24 @@ def find_pyproject_toml() -> Path:
             return path / pyproject
         path = path.parent
 
-    msg = "Could not find 'pyproject.toml'"
-    raise FileNotFoundError(msg)
+    return None
 
 
-def find_config_ini() -> Path:
-    msg = f"""
-        Configuring latexplotlib via {CONFIGPATH} is being deprecated. Please use
-        the [tool.latexplotlib] section of the 'pyproject.toml' file instead.
-
-        To silence this warning, please delete the config file {CONFIGPATH}
-    """
-    warnings.warn(msg, DeprecationWarning, stacklevel=2)
-
+def find_config_ini() -> Path | None:
     if CONFIGPATH.exists():
+        msg = f"""
+            Configuring latexplotlib via '{CONFIGPATH}' is being deprecated. Please use
+            the [tool.latexplotlib] section of the 'pyproject.toml' file instead. If a
+            'pyproject.toml' file is present in the current directory or a parent
+            directory, the configuration at '{CONFIGPATH}' is being ignored.
+
+            To silence this warning, please delete the config file '{CONFIGPATH}'.
+        """
+        warnings.warn(msg, DeprecationWarning, stacklevel=5)
+
         return CONFIGPATH
 
-    msg = f"No such file: '{CONFIGPATH}'"
-    raise FileNotFoundError(msg)
+    return None
 
 
 class Size:
@@ -133,13 +133,16 @@ class Size:
         return str(f"{self._width}pt, {self._height}pt")
 
 
-try:
-    path = find_pyproject_toml()
-    size = Size.from_pyproject_toml(path)
-except FileNotFoundError:
-    try:
-        path = find_config_ini()
+def get_size() -> Size:
+    if (path := find_pyproject_toml()) is not None:
+        # look for config.ini to emit deprecation warning if it exists
+        _ = find_config_ini()
+        return Size.from_pyproject_toml(path)
 
-        size = Size.from_config_ini(path)
-    except FileNotFoundError:
-        size = Size(width=DEFAULT_WIDTH, height=DEFAULT_HEIGHT)
+    if (path := find_config_ini()) is not None:
+        return Size.from_config_ini(path)
+
+    return Size(width=DEFAULT_WIDTH, height=DEFAULT_HEIGHT)
+
+
+size = get_size()

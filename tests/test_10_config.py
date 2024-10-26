@@ -24,8 +24,7 @@ class TestFindPyprojectToml:
         cfg.find_pyproject_toml()
 
     def test_pyproject_not_exists(self, path):
-        with pytest.raises(FileNotFoundError):
-            cfg.find_pyproject_toml()
+        assert cfg.find_pyproject_toml() is None
 
 
 class TestFindConfigIni:
@@ -45,8 +44,7 @@ class TestFindConfigIni:
             cfg.find_config_ini()
 
     def test_configini_not_exists(self, path):
-        with pytest.warns(DeprecationWarning), pytest.raises(FileNotFoundError):
-            cfg.find_config_ini()
+        assert cfg.find_config_ini() is None
 
 
 class TestSize:
@@ -127,3 +125,8 @@ class TestSize:
         size = cfg.Size.from_pyproject_toml(path)
         assert size._width == cfg.DEFAULT_WIDTH
         assert size._height == cfg.DEFAULT_HEIGHT
+
+
+class TestGetSize:
+    def test_todo(self):
+        raise NotImplementedError
