@@ -1,75 +1,86 @@
 import json
-from collections.abc import Iterator, Mapping
+import sys
+import warnings
+from collections.abc import Iterator
 from contextlib import contextmanager
 from pathlib import Path
 from typing import Union
 
 from appdirs import user_config_dir
 
+if sys.version_info >= (3, 11):
+    import tomllib
+else:
+    import tomli as tomllib
+
 Number = Union[int, float]
 ConfigData = Union[Number, bool]
 
 GOLDEN_RATIO: float = (5**0.5 + 1) / 2
 NAME: str = "latexplotlib"
-_PURGED_OLD = "_purged_old_styles"
-
 CONFIGFILE: str = "config.ini"
 CONFIGDIR: Path = Path(user_config_dir(NAME))
 CONFIGPATH: Path = CONFIGDIR / CONFIGFILE
-DEFAULT_CONFIG: dict[str, Number] = {"width": 630, "height": 412, _PURGED_OLD: False}
+DEFAULT_WIDTH = 630
+DEFAULT_HEIGHT = 412
 
 
-class Config:
-    def __init__(self, path: Path) -> None:
-        self.path = path
+def find_pyproject_toml() -> Path | None:
+    pyproject = "pyproject.toml"
+    path = Path().absolute()
+    while path != Path("/"):
+        if (path / pyproject).exists():
+            return path / pyproject
+        path = path.parent
 
-        if not self.path.exists():
-            self.reset()
-
-        self._config = self._open(path)
-
-    def _open(self, path: Path) -> dict[str, ConfigData]:
-        with path.open(encoding="utf-8") as fh:
-            config: dict[str, ConfigData] = json.load(fh)
-        return config
-
-    def _write(self, cfg: Mapping[str, ConfigData]) -> None:
-        if not self.path.parent.exists():
-            self.path.parent.mkdir(parents=True)
-
-        with self.path.open("w", encoding="utf-8") as fh:
-            json.dump(cfg, fh, indent=4)
-
-    def reset(self) -> None:
-        if self.path.exists():
-            self.path.unlink()
-
-        self._write(DEFAULT_CONFIG)
-
-    def reload(self) -> None:
-        self._config = self._open(self.path)
-
-    def __getitem__(self, name: str) -> ConfigData:
-        return self._config.get(name, DEFAULT_CONFIG[name])
-
-    def __setitem__(self, name: str, value: ConfigData) -> None:
-        self._config[name] = value
-        self._write(self._config)
+    return None
 
 
-config = Config(CONFIGPATH)
+def find_config_ini() -> Path | None:
+    if CONFIGPATH.exists():
+        msg = f"""
+            Configuring latexplotlib via '{CONFIGPATH}' is being deprecated. Please use
+            the [tool.latexplotlib] section of the 'pyproject.toml' file instead. If a
+            'pyproject.toml' file is present in the current directory or a parent
+            directory, the configuration at '{CONFIGPATH}' is being ignored.
+
+            To silence this warning, please delete the config file '{CONFIGPATH}'.
+        """
+        warnings.warn(msg, DeprecationWarning, stacklevel=5)
+
+        return CONFIGPATH
+
+    return None
 
 
 class Size:
     _width: Number
     _height: Number
 
-    def __init__(self) -> None:
-        self._width, self._height = config["width"], config["height"]
+    def __init__(self, *, width: Number, height: Number) -> None:
+        self._width, self._height = width, height
 
-    def reload(self) -> None:
-        config.reload()
-        self._width, self._height = config["width"], config["height"]
+    @classmethod
+    def from_pyproject_toml(cls, path: Path) -> "Size":
+        with path.open("rb") as fh:
+            cfg = tomllib.load(fh)
+
+        config = cfg.get("tool", {}).get("latexplotlib", {})
+
+        return cls(
+            width=config.get("width", DEFAULT_WIDTH),
+            height=config.get("height", DEFAULT_HEIGHT),
+        )
+
+    @classmethod
+    def from_config_ini(cls, path: Path) -> "Size":
+        with path.open(encoding="utf-8") as fh:
+            config: dict[str, Number] = json.load(fh)
+
+        return cls(
+            width=config.get("width", DEFAULT_WIDTH),
+            height=config.get("height", DEFAULT_HEIGHT),
+        )
 
     def get(self) -> tuple[Number, Number]:
         """Returns the current size of the figure in pts.
@@ -96,7 +107,6 @@ class Size:
         height : int
             The height of the latex page in pts.
         """
-        config["width"], config["height"] = width, height
         self._width, self._height = width, height
 
     @contextmanager
@@ -123,4 +133,16 @@ class Size:
         return str(f"{self._width}pt, {self._height}pt")
 
 
-size = Size()
+def get_size() -> Size:
+    if (path := find_pyproject_toml()) is not None:
+        # look for config.ini to emit deprecation warning if it exists
+        _ = find_config_ini()
+        return Size.from_pyproject_toml(path)
+
+    if (path := find_config_ini()) is not None:
+        return Size.from_config_ini(path)
+
+    return Size(width=DEFAULT_WIDTH, height=DEFAULT_HEIGHT)
+
+
+size = get_size()

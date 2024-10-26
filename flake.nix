@@ -33,7 +33,11 @@
             attrs = project.renderers.withPackages {
               inherit python;
               extras = [ "tests" ];
-              extraPackages = python-pkgs: [ python-pkgs.ipykernel ];
+              extraPackages = python-pkgs: [
+                python-pkgs.ipykernel
+                python-pkgs.python-lsp-server
+                python-pkgs.pylsp-mypy
+              ];
             };
             pythonEnv = python.withPackages attrs;
           in
