@@ -12,12 +12,12 @@ from ._styles import make_styles_available
 from ._version import __version__
 
 __all__ = [
+    "__version__",
     "convert_inches_to_pt",
     "convert_pt_to_inches",
     "figsize",
     "size",
     "subplots",
-    "__version__",
 ]
 
 
