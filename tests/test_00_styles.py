@@ -9,9 +9,9 @@ styles_folder = Path("src/latexplotlib/styles/")
 class TestStyles:
     @pytest.mark.parametrize("style", styles_folder.iterdir())
     def test_style(self, style, caplog):
-        assert (
-            style.suffix == ".mplstyle"
-        ), f"The style '{style}' has an invalid suffix!"
+        assert style.suffix == ".mplstyle", (
+            f"The style '{style}' has an invalid suffix!"
+        )
 
         plt.style.use(style)
         if caplog.text:
