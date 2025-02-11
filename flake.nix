@@ -33,7 +33,11 @@
             attrs = project.renderers.withPackages {
               inherit python;
               extras = [ "tests" ];
-              extraPackages = python-pkgs: [ python-pkgs.ipykernel ];
+              extraPackages =
+                python-pkgs: with python-pkgs; [
+                  ipykernel
+                  python-lsp-server
+                ];
             };
             pythonEnv = python.withPackages attrs;
           in
@@ -45,6 +49,7 @@
                 pre-commit
                 rustc # for pre-commit ruff
                 cargo # for pre-commit ruff
+                texliveMinimal
               ]);
             shellHook = ''
               export PYTHONPATH="$(pwd)/src"
