@@ -47,13 +47,14 @@
               ++ (with pkgs; [
                 ruff
                 pre-commit
-                rustc # for pre-commit ruff
-                cargo # for pre-commit ruff
+                stdenv.cc.cc.libgcc # for pre-commit ruff auto patchelf
                 texliveMinimal
               ]);
+            nativeBuildInputs = [ pkgs.autoPatchelfHook ];
             shellHook = ''
+              patch=$(autoPatchelf ~/.cache/pre-commit/)
+
               export PYTHONPATH="$(pwd)/src"
-              export PIP_NO_BINARY="ruff"
             '';
           };
       }
