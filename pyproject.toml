@@ -1,6 +1,6 @@
 [build-system]
 build-backend = "setuptools.build_meta"
-requires = ["matplotlib", "setuptools"]
+requires = ["setuptools"]
 
 [project]
 authors = [
@@ -17,7 +17,8 @@ classifiers = [
 ]
 dependencies = [
     "appdirs",
-    "matplotlib"
+    "matplotlib",
+    "tomli; python_version < '3.11'"
 ]
 description = "Perfect matplotlib figures for latex"
 dynamic = ["version"]
@@ -47,7 +48,10 @@ Homepage = "https://github.com/cgahr/latexplotlib"
 Issues = "https://github.com/cgahr/latexplotlib/issues"
 
 [tool.coverage.report]
-exclude_lines = ["if TYPE_CHECKING:"]
+exclude_lines = [
+    "if TYPE_CHECKING:",
+    "import tomli as tomllib"  # tested via GitHub actions
+]
 
 [tool.coverage.run]
 source = ["src"]
@@ -118,7 +122,8 @@ src = ["src"]
 [tool.ruff.lint]
 fixable = ["I"]
 ignore = [
-    "ANN101"  # missing-type-self
+    "ANN101",  # missing-type-self
+    "ANN102"  # missing-type-cls
 ]
 select = [
     "A",
@@ -178,6 +183,7 @@ suppress-dummy-args = true
     "ARG002",  # unused-method-argument
     "INP",  # implicit-namespace-package
     "PLR0913",  # too-many-arguments
+    "PLR6301",
     "S101",  # assert
     "SLF001"  # private-member-access
 ]

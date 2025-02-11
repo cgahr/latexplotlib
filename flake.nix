@@ -37,6 +37,7 @@
                 python-pkgs: with python-pkgs; [
                   ipykernel
                   python-lsp-server
+                  pylsp-mypy
                 ];
             };
             pythonEnv = python.withPackages attrs;
