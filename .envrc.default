@@ -1,2 +1,2 @@
-watch_file pyproject.toml flake.nix
+watch_file flake.nix flake.lock uv.lock
 use flake
