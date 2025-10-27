@@ -16,10 +16,10 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        python-version: ["3.9", "3.10", "3.11", "3.12"]
+        python-version: ["3.10", "3.11", "3.12", "3.13"]
         coverage: [false]
         include:
-          - python-version: "3.13"
+          - python-version: "3.14"
             coverage: true
     steps:
       - uses: actions/checkout@v4
