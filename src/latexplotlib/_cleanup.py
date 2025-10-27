@@ -1,4 +1,5 @@
 import filecmp
+from collections.abc import Sequence
 from pathlib import Path
 
 from matplotlib import get_configdir
@@ -19,7 +20,7 @@ STYLES = {
 STYLES_FOLDER = "styles"
 
 
-def purge_old_styles(path: list[str]) -> None:
+def purge_old_styles(path: Sequence[str]) -> None:
     if config[_PURGED_OLD]:
         return
 

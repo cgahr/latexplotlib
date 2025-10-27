@@ -22,7 +22,7 @@ __all__ = [
 
 
 def __getattr__(name: str) -> Any:  # noqa: ANN401
-    import matplotlib.pyplot as plt
+    import matplotlib.pyplot as plt  # noqa: PLC0415
 
     return getattr(plt, name)
 

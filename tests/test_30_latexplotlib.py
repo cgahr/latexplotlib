@@ -103,7 +103,7 @@ class TestFigsize:
 
     @pytest.mark.parametrize("aspect", ["test", "asd", "min"])
     def test_invalid_aspect(self, aspect):
-        with pytest.raises(ValueError, match="'aspect' a float, 'equal' or 'auto'."):
+        with pytest.raises(ValueError, match=r"'aspect' a float, 'equal' or 'auto'."):
             lpl.figsize(1, 1, aspect=aspect)
 
     def test_negative_scale(self):
@@ -133,7 +133,7 @@ class TestSubplots:
             lpl.subplots(1, 1, fraction=1)
 
     def test_warns_if_figsize_used(self):
-        with pytest.warns(UserWarning):
+        with pytest.warns(UserWarning, match="figsize"):
             lpl.subplots(1, 1, figsize=(3, 4))
 
     @pytest.mark.skipif(
@@ -205,7 +205,7 @@ class TestSubplots:
 
     @pytest.mark.usefixtures("_set_size", "_show")
     def test_plot2(self):
-        fig, axes = lpl.subplots(
+        _, _ = lpl.subplots(
             1,
             2,
             aspect="equal",

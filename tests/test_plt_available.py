@@ -22,5 +22,5 @@ def test_lpl_doesnt_overwrite_existing_in_plt(function):
 
 
 def test_non_existent_raises():
-    with pytest.raises(AttributeError, match="matplotlib.pyplot"):
+    with pytest.raises(AttributeError, match=r"matplotlib.pyplot"):
         lpl.doesnt_exist  # noqa: B018
