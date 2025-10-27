@@ -1,6 +1,6 @@
 import warnings
 from collections.abc import Sequence
-from typing import TYPE_CHECKING, Any, Literal, Optional, Union
+from typing import TYPE_CHECKING, Any, Literal
 
 import matplotlib.pyplot as plt
 
@@ -72,9 +72,9 @@ def figsize(  # noqa: PLR0913
     ncols: int = 1,
     *,
     scale: float = 1.0,
-    aspect: Union[float, Literal["auto", "equal"]] = GOLDEN_RATIO,
-    height_ratios: Optional[Sequence[float]] = None,
-    width_ratios: Optional[Sequence[float]] = None,
+    aspect: float | Literal["auto", "equal"] = GOLDEN_RATIO,
+    height_ratios: Sequence[float] | None = None,
+    width_ratios: Sequence[float] | None = None,
 ) -> tuple[float, float]:
     """Computes the optimal figsize.
 
@@ -141,14 +141,14 @@ def subplots(  # noqa: PLR0913
     ncols: int = 1,
     *,
     scale: float = 1.0,
-    aspect: Union[float, Literal["auto", "equal"]] = GOLDEN_RATIO,
-    sharex: Union[bool, Literal["none", "all", "row", "col"]] = False,
-    sharey: Union[bool, Literal["none", "all", "row", "col"]] = False,
+    aspect: float | Literal["auto", "equal"] = GOLDEN_RATIO,
+    sharex: bool | Literal["none", "all", "row", "col"] = False,
+    sharey: bool | Literal["none", "all", "row", "col"] = False,
     squeeze: bool = True,
-    width_ratios: Optional[Sequence[float]] = None,
-    height_ratios: Optional[Sequence[float]] = None,
-    subplot_kw: Optional[dict[str, Any]] = None,
-    gridspec_kw: Optional[dict[str, Any]] = None,
+    width_ratios: Sequence[float] | None = None,
+    height_ratios: Sequence[float] | None = None,
+    subplot_kw: dict[str, Any] | None = None,
+    gridspec_kw: dict[str, Any] | None = None,
     **fig_kw: Any,  # noqa: ANN401
 ) -> tuple[Figure, Any]:
     """

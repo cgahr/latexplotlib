@@ -2,12 +2,11 @@ import json
 from collections.abc import Iterator, Mapping
 from contextlib import contextmanager
 from pathlib import Path
-from typing import Union
 
 from appdirs import user_config_dir
 
-Number = Union[int, float]
-ConfigData = Union[Number, bool]
+Number = int | float
+ConfigData = Number | bool
 
 GOLDEN_RATIO: float = (5**0.5 + 1) / 2
 NAME: str = "latexplotlib"

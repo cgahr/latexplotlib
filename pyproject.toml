@@ -7,7 +7,6 @@ authors = [
     {email = "latexplotlib.gvxel@aleeas.com", name = "Constantin Gahr"}
 ]
 classifiers = [
-    "Programming Language :: Python :: 3.9",
     "Programming Language :: Python :: 3.10",
     "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3.12",
@@ -32,7 +31,7 @@ keywords = [
 license = {text = "MIT"}
 name = "latexplotlib"
 readme = "README.md"
-requires-python = ">=3.9"
+requires-python = ">=3.10"
 
 [project.optional-dependencies]
 dev = [
@@ -111,7 +110,7 @@ strict = true
 addopts = ["--cov", "--cov-report=html", "--cov-report=term", "--strict-config", "--strict-markers", "-ra"]
 filterwarnings = ["error", "default::DeprecationWarning"]
 log_cli_level = "INFO"
-minversion = 7
+minversion = "7"
 testpaths = [
     "tests"
 ]
