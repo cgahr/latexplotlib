@@ -20,7 +20,7 @@ pip install latexplotlib
 ```python
 import latexplotlib as lpl
 
-lpl.style.use('latex10pt')
+lpl.style.use("latex10pt")
 # lpl.style.use('latex10pt-minimal')
 ```
 
@@ -78,7 +78,7 @@ x = np.linspace(1, 5, 100)
 
 for t in range(4):
     label = f"$x^{t}$"
-    ax.plot(x, x ** t, label=label)
+    ax.plot(x, x**t, label=label)
 
 ax.set_yscale("log")
 ax.set_title("Perfect matplotlib figures for \\LaTeX")
@@ -111,7 +111,7 @@ x = np.linspace(1, 5, 100)
 
 for t in range(4):
     label = f"$x^{t}$"
-    ax.plot(x, x ** t, label=label)
+    ax.plot(x, x**t, label=label)
 
 ax.set_yscale("log")
 ax.set_title("Perfect matplotlib figures for \\LaTeX")
@@ -134,7 +134,7 @@ lpl.savefig(
     dpi=300,
     format="pdf",
     orientation="portrait",
-    pad_inches=0.05
+    pad_inches=0.05,
 )
 ```
 
@@ -172,7 +172,7 @@ _ = lpl.subplots(1, 1)
 fig, axes = lpl.subplots(3, 2, scale=0.8)
 
 # A subplot for 3 square plots next to each other
-fig, axes = lpl.subplots(1, 3, scale=0.8, aspect='equal')
+fig, axes = lpl.subplots(1, 3, scale=0.8, aspect="equal")
 ```
 
 ### `aspect` keyword
